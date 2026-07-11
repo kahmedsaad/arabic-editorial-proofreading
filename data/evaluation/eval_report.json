@@ -1,0 +1,168 @@
+{
+  "expected_issues": 25,
+  "detected_issues": 74,
+  "exact_match": 25,
+  "partial_span_match": 0,
+  "category_match": 25,
+  "suggestion_match": 23,
+  "false_positives": 49,
+  "missed_findings": 0,
+  "precision": 0.33783783783783783,
+  "recall": 1.0,
+  "f1": 0.5050505050505051,
+  "processing_time_ms": 76.89830000163056,
+  "gemini_calls": 0,
+  "token_usage": {},
+  "details": [
+    {
+      "record_id": "GOLD-CTRL-001",
+      "exact_match": 3,
+      "partial_span_match": 0,
+      "category_match": 3,
+      "suggestion_match": 3,
+      "false_positives": 4,
+      "missed_findings": 0,
+      "matched": 3
+    },
+    {
+      "record_id": "GOLD-CTRL-002",
+      "exact_match": 0,
+      "partial_span_match": 0,
+      "category_match": 0,
+      "suggestion_match": 0,
+      "false_positives": 0,
+      "missed_findings": 0,
+      "matched": 0
+    },
+    {
+      "record_id": "GOLD-CTRL-003",
+      "exact_match": 2,
+      "partial_span_match": 0,
+      "category_match": 2,
+      "suggestion_match": 2,
+      "false_positives": 1,
+      "missed_findings": 0,
+      "matched": 2
+    },
+    {
+      "record_id": "GOLD-PAIR-001",
+      "exact_match": 3,
+      "partial_span_match": 0,
+      "category_match": 3,
+      "suggestion_match": 3,
+      "false_positives": 6,
+      "missed_findings": 0,
+      "matched": 3
+    },
+    {
+      "record_id": "GOLD-PAIR-002",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 2,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-003",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 6,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-004",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 3,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-005",
+      "exact_match": 2,
+      "partial_span_match": 0,
+      "category_match": 2,
+      "suggestion_match": 2,
+      "false_positives": 5,
+      "missed_findings": 0,
+      "matched": 2
+    },
+    {
+      "record_id": "GOLD-PAIR-006",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 5,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-007",
+      "exact_match": 3,
+      "partial_span_match": 0,
+      "category_match": 3,
+      "suggestion_match": 2,
+      "false_positives": 1,
+      "missed_findings": 0,
+      "matched": 3
+    },
+    {
+      "record_id": "GOLD-PAIR-008",
+      "exact_match": 3,
+      "partial_span_match": 0,
+      "category_match": 3,
+      "suggestion_match": 2,
+      "false_positives": 0,
+      "missed_findings": 0,
+      "matched": 3
+    },
+    {
+      "record_id": "GOLD-PAIR-009",
+      "exact_match": 2,
+      "partial_span_match": 0,
+      "category_match": 2,
+      "suggestion_match": 2,
+      "false_positives": 5,
+      "missed_findings": 0,
+      "matched": 2
+    },
+    {
+      "record_id": "GOLD-PAIR-010",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 0,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-011",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 7,
+      "missed_findings": 0,
+      "matched": 1
+    },
+    {
+      "record_id": "GOLD-PAIR-014",
+      "exact_match": 1,
+      "partial_span_match": 0,
+      "category_match": 1,
+      "suggestion_match": 1,
+      "false_positives": 4,
+      "missed_findings": 0,
+      "matched": 1
+    }
+  ]
+}

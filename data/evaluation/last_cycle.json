@@ -1,0 +1,109 @@
+﻿{
+  "review_id": "REV-34F6DFD7C2",
+  "ai": 1,
+  "mech": 7,
+  "findings": [
+    {
+      "finding_id": "FND-M-0001",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪ú",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0002",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪Ñ",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0003",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪ú",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0004",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪ú",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0005",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪ú",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0006",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪Ñ",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-M-0007",
+      "source": "mechanical",
+      "category": "spelling",
+      "decision": "soft_warning",
+      "original_text": "╪ú",
+      "suggested_text": null,
+      "rule_ids": [
+        "MECH-LETTER-VAR"
+      ],
+      "explanation_ar": "╪º╪«╪¬┘ä╪º┘ü ╪ú╪┤┘â╪º┘ä ╪º┘ä╪ú┘ä┘ü ╪»╪º╪«┘ä ╪º┘ä┘à┘é╪╖╪╣╪¢ ┘ä┘ä┘à╪╖╪º╪¿┘é╪⌐ ┘ü┘é╪╖.",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "FND-AI-FALLBACK",
+      "source": "gemini",
+      "category": "clarity",
+      "decision": "needs_editor_review",
+      "original_text": "╪¡╪▓╪¿ ╪º┘ä┘ä┘ç ╪▒╪¿┘à",
+      "suggested_text": null,
+      "rule_ids": [],
+      "explanation_ar": "╪¬╪╣╪░╪▒ ╪Ñ┘â┘à╪º┘ä ╪¬╪¡┘ä┘è┘ä ╪º┘ä┘å┘à┘ê╪░╪¼: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and bi",
+      "confidence": 0.0
+    }
+  ]
+}

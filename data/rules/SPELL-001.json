@@ -1,0 +1,13 @@
+{
+  "rule_id": "SPELL-001",
+  "version": "1.0",
+  "title_ar": "تصحيح الإملاء الشائع",
+  "category": "spelling",
+  "rule_type": "lexical",
+  "description_ar": "استبدال الأشكال الإملائية الخاطئة الشائعة بالشكل المعتمد.",
+  "applies_to_zones": ["headline", "body"],
+  "severity": "medium",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

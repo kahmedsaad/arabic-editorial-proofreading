@@ -1,0 +1,38 @@
+Read PROJECT_CONTEXT.md completely before making changes.
+
+Create the first working version of the Arabic Editorial Proofreading Engine.
+
+For this first task, implement only:
+1. Python 3.12 FastAPI project structure.
+2. Pydantic models for Document, Segment, EditorialRule, Entity, Finding, ReviewRequest, ReviewResponse.
+3. Arabic normalization module.
+4. Article segmentation for headline and body paragraphs.
+5. Mechanical checks for duplicate adjacent words, repeated whitespace, spacing before punctuation, repeated punctuation, and known spelling replacements from JSON.
+6. Local JSON rule repository.
+7. MockEditorialAIClient with deterministic test findings.
+8. Review orchestrator.
+9. Deterministic finding validator.
+10. POST /api/v1/reviews.
+11. GET /api/v1/health.
+12. Unit and integration tests.
+13. Seed Arabic rules and article fixtures.
+14. Dockerfile and README.
+
+Do not add Gemini, GCP, Firestore, vector search, authentication, frontend, or training in this task.
+
+Requirements:
+- Preserve original Arabic text.
+- Normalization only for matching.
+- Stable segment IDs.
+- Findings reference exact text spans.
+- Invalid findings are rejected.
+- All tests pass.
+- Use Ruff and type hints.
+- Keep modules small and clear.
+
+After implementation:
+1. run tests;
+2. run linting;
+3. show project tree;
+4. summarize endpoints;
+5. list next recommended task.

@@ -1,0 +1,80 @@
+{
+  "article_id": "aj-hezbollah-drones-v3",
+  "golden_path": "C:\\Users\\khhab\\Downloads\\ai-proofreading\\data\\evaluation\\golden_editorial.jsonl",
+  "clients": [
+    {
+      "client": "mock",
+      "gold_total": 6,
+      "span_hits": 6,
+      "decision_hits": 6,
+      "rule_hits": 6,
+      "suggestion_hits": 2,
+      "span_recall": 1.0,
+      "decision_recall": 1.0,
+      "quote_preserve_ok": 2,
+      "quote_preserve_total": 2,
+      "quote_preserve_rate": 1.0,
+      "detected_findings": 9,
+      "rejected_findings": 2,
+      "processing_time_ms": 5.0,
+      "poc_pass": true,
+      "details": [
+        {
+          "gold_id": "G_HEADLINE_001",
+          "span": "مقاتليه",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": true,
+          "quote_ok": null
+        },
+        {
+          "gold_id": "G_LEAD_001",
+          "span": "وسائل إعلام لبنانية",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": false,
+          "quote_ok": null
+        },
+        {
+          "gold_id": "G_BODY_001",
+          "span": "تأكيده",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": true,
+          "quote_ok": null
+        },
+        {
+          "gold_id": "G_QUOTE_001",
+          "span": "المقاومة لن تسكت على هذا العدوان",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": false,
+          "quote_ok": true
+        },
+        {
+          "gold_id": "G_QUOTE_002",
+          "span": "منظمة إرهابية",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": false,
+          "quote_ok": true
+        },
+        {
+          "gold_id": "G_CAPTION_001",
+          "span": "للميليشيا المدعومة من الخارج لترهيب الحدود",
+          "span_hit": true,
+          "decision_hit": true,
+          "rule_hit": true,
+          "suggestion_hit": false,
+          "quote_ok": null
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

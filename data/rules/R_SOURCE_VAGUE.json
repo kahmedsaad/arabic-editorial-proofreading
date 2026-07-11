@@ -1,0 +1,13 @@
+{
+  "rule_id": "R_SOURCE_VAGUE",
+  "version": "1.0",
+  "title_ar": "مصدر إعلامي مبهم",
+  "category": "attribution",
+  "rule_type": "relational",
+  "description_ar": "استبدل الإسناد المبهم مثل وسائل إعلام بمصدر مسمى أو ليّن الصياغة.",
+  "applies_to_zones": ["headline", "body"],
+  "severity": "high",
+  "keywords": ["وسائل إعلام", "مصادر إعلامية", "مصادر مطلعة"],
+  "examples": [],
+  "active": true
+}

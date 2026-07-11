@@ -1,0 +1,15 @@
+Read PROJECT_CONTEXT.md and the existing codebase.
+
+Add Gemini integration while preserving the mock client.
+
+Requirements:
+- Implement GeminiEditorialAIClient behind the existing interface.
+- Use structured JSON output matching the Finding schema.
+- Add versioned prompt files.
+- Pass only article segments, mechanical findings, retrieved rules, and detected entities.
+- Do not request full-article rewriting.
+- Add strict timeout and error handling.
+- Fall back safely to needs_editor_review when parsing or model output fails.
+- Add token/latency logging where available.
+- Unit tests must use mocks and require no GCP credentials.
+- Add one optional manual integration test disabled by default.

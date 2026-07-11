@@ -1,0 +1,16 @@
+{
+  "entity_id": "E_HEZBOLLAH",
+  "canonical_ar": "حزب الله",
+  "aliases": [],
+  "category": "organization",
+  "active": true,
+  "preferred_descriptors": [
+    "عناصر",
+    "أعضاء"
+  ],
+  "discouraged_descriptors": [
+    "مقاتلين",
+    "مقاتلي",
+    "ميليشيا"
+  ]
+}

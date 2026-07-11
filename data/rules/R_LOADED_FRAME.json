@@ -1,0 +1,13 @@
+{
+  "rule_id": "R_LOADED_FRAME",
+  "version": "1.0",
+  "title_ar": "إطار المقاومة في صوت الناشر",
+  "category": "loaded_framing",
+  "rule_type": "relational",
+  "description_ar": "إطار المقاومة مقبول داخل الاقتباس المباشر؛ يُراجع إن ورد في سرد الناشر.",
+  "applies_to_zones": ["headline", "body", "quote"],
+  "severity": "medium",
+  "keywords": ["المقاومة", "مقاومة"],
+  "examples": [],
+  "active": true
+}

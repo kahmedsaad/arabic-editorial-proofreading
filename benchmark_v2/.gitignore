@@ -1,0 +1,12 @@
+# Hidden benchmark_v2 — keep gold answers out of git and out of the engine.
+
+# Private gold + manifest (never ship to engine prompts / Cursor indexing if possible)
+private/gold/
+private/manifest.json
+
+# Run artifacts
+results/*
+!results/.gitkeep
+results/engine_outputs*.json
+results/report*.json
+results/report*.html

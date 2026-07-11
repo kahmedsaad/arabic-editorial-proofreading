@@ -1,0 +1,18 @@
+{
+  "article_id": "adv-vague-future",
+  "title": "مصدر عن الاستقالة",
+  "language": "ar",
+  "content_type": "news",
+  "sections": [
+    {
+      "section_id": "headline",
+      "surface": "headline",
+      "text": "مصدر عن الاستقالة"
+    },
+    {
+      "section_id": "p1",
+      "surface": "lead",
+      "text": "بحسب مصادر، فإن الوزير سيستقيل غدًا."
+    }
+  ]
+}

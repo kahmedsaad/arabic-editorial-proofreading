@@ -1,0 +1,29 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+.env
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+frontend/node_modules/
+frontend/dist/
+frontend/.tanstack/
+data/ui_reference/
+
+.gcp-gemini-sa.json
+*.iam.json
+
+# Hidden benchmark_v2 gold (scorer-only; never feed the engine)
+benchmark_v2/private/gold/
+benchmark_v2/private/manifest.json
+benchmark_v2/results/*
+!benchmark_v2/results/.gitkeep
+_tmp_benchmark_v2/

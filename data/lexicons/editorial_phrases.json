@@ -1,0 +1,937 @@
+{
+  "version": "1",
+  "vague_sources": [
+    {
+      "span": "وسائل إعلام لبنانية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "إسناد إعلامي مبهم؛ يُفضَّل تسمية المصدر أو تليين الصياغة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "وسائل إعلام",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "إسناد إعلامي مبهم.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مصادر إعلامية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "إسناد إعلامي مبهم.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مصادر مطلعة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "medium",
+      "explanation_ar": "مصدر غير مسمّى يحتاج توضيحاً أو تلييناً.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مصادر مطلعه",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "مصدر مجهّل يحتاج تسمية أو تلييناً.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مراقبون",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "إسناد عام مبهم (مراقبون).",
+      "requires_editor_review": true
+    },
+    {
+      "span": "ناشط يدعى",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "مصدر فردي غير موثّق بشكل كافٍ.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "بحسب مصادر",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "مصدر مجهّل مع تأكيد مستقبلي.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    }
+  ],
+  "confirmation_verbs": [
+    {
+      "span": "تأكيده",
+      "suggested_text": "قوله",
+      "rule_ids": [
+        "R_ATTR_CONFIRMATION"
+      ],
+      "category": "attribution_strength",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "فعل تأكيد مع مصدر واحد؛ يُفضَّل فعل إسناد أضعف.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "أكد أن",
+      "suggested_text": "قال إن",
+      "rule_ids": [
+        "R_ATTR_CONFIRMATION"
+      ],
+      "category": "attribution_strength",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "فعل تأكيد قد يقوّي الادعاء دون دليل إضافي.",
+      "requires_editor_review": true
+    }
+  ],
+  "nonstate_descriptors": [
+    {
+      "span": "مقاتليه",
+      "suggested_text": "عناصره",
+      "rule_ids": [
+        "R_DESC_NONSTATE"
+      ],
+      "category": "entity_name",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف مقاتل بصوت الناشر يحتاج مراجعة؛ يُفضَّل وصف محايد.",
+      "requires_editor_review": true,
+      "prefer_zones": [
+        "headline"
+      ]
+    },
+    {
+      "span": "مقاتليها",
+      "suggested_text": "عناصرها",
+      "rule_ids": [
+        "R_DESC_NONSTATE"
+      ],
+      "category": "entity_name",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف مقاتل بصوت الناشر يحتاج مراجعة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مقاتلي",
+      "suggested_text": "عناصر",
+      "rule_ids": [
+        "R_DESC_NONSTATE"
+      ],
+      "category": "entity_name",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف مقاتل بصوت الناشر يحتاج مراجعة.",
+      "requires_editor_review": true
+    }
+  ],
+  "loaded_caption_phrases": [
+    {
+      "span": "للميليشيا المدعومة من الخارج لترهيب الحدود",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R04",
+        "R07"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تأطير محمل في تعليق الصورة/النص.",
+      "requires_editor_review": true,
+      "prefer_zones": [
+        "caption",
+        "body"
+      ]
+    },
+    {
+      "span": "الميليشيا المدعومة من الخارج",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R04"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف محمل يحتاج مراجعة تحريرية.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "عناصر المعارضة المخربة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R07"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تأطير محمل في تعليق الصورة.",
+      "requires_editor_review": true,
+      "prefer_zones": [
+        "caption",
+        "body"
+      ]
+    },
+    {
+      "span": "المخربين",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف منحاز بصوت الناشر.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "الجماعة المتطرفة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R_TERROR_LABEL"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وسم بالتطرف دون أساس قانوني واضح.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "الخونه",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف قدحي منحاز.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "الخونة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف قدحي منحاز.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "أكاذيب",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "لغة قدحية/تحريضية.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "أعداء الوطن",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "لغة تحريضية ضد الخصوم.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "مكاسب سياسية رخيصة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "رأي/تحريض بصوت الناشر.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "يسحق المتمردين",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "لغة عسكرية منحازة في العنوان.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "النصر الساحق",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تضخيم دعائي.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "العصابات الإرهابية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_TERROR_LABEL",
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "وصف بالإرهاب دون تصنيف قانوني ظاهر.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "فرحة الشعب",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R_OVERGENERALIZE"
+      ],
+      "category": "loaded_framing",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "عبارة دعائية.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "الإرادة الوطنية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03",
+        "R_OVERGENERALIZE"
+      ],
+      "category": "loaded_framing",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "عبارة دعائية.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "تنشر الذعر",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "لغة تحريضية ضد المعارضة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "المخالفات البسيطة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "loaded_framing",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "تقليل من شأن مخالفات واسعة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "وهذا بالفعل ما تثبته",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تبنّي اتهام بعد الاقتباس بصوت الكاتب.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    }
+  ],
+  "quote_preserve": [
+    {
+      "span": "المقاومة لن تسكت على هذا العدوان",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_LOADED_FRAME"
+      ],
+      "category": "loaded_framing",
+      "decision": "needs_editor_review",
+      "severity": "medium",
+      "explanation_ar": "اقتباس مباشر — تُحفظ الصياغة.",
+      "requires_editor_review": true,
+      "must_be_quoted": true
+    },
+    {
+      "span": "منظمة إرهابية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_TERROR_LABEL"
+      ],
+      "category": "loaded_framing",
+      "decision": "needs_editor_review",
+      "severity": "high",
+      "explanation_ar": "وصف داخل اقتباس — لا يُستبدل تلقائياً.",
+      "requires_editor_review": true,
+      "must_be_quoted": true
+    },
+    {
+      "span": "الجماعات الإرهابية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_TERROR_LABEL"
+      ],
+      "category": "loaded_framing",
+      "decision": "needs_editor_review",
+      "severity": "high",
+      "explanation_ar": "وصف بالإرهاب يحتاج أساساً قانونياً واضحاً.",
+      "requires_editor_review": true,
+      "must_be_quoted": true
+    },
+    {
+      "span": "مجموعة من العملاء",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "quote_voice",
+      "decision": "needs_editor_review",
+      "severity": "medium",
+      "explanation_ar": "لغة حادة داخل اقتباس منسوب — لا تُستبدل تلقائيًا.",
+      "requires_editor_review": true,
+      "must_be_quoted": true,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "فاسدة بالكامل",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "quote_voice",
+      "decision": "needs_editor_review",
+      "severity": "medium",
+      "explanation_ar": "اقتباس منسوب — يُحفظ مع تحذير حساسية فقط.",
+      "requires_editor_review": true,
+      "must_be_quoted": true,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "محدودة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R04"
+      ],
+      "category": "quote_voice",
+      "decision": "needs_editor_review",
+      "severity": "low",
+      "explanation_ar": "لا تستبدل بمرادف قد يغيّر القوة الدلالية.",
+      "requires_editor_review": true,
+      "must_be_quoted": true,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "تعمل ضد الوطن",
+      "suggested_text": null,
+      "rule_ids": [
+        "R03"
+      ],
+      "category": "quote_voice",
+      "decision": "needs_editor_review",
+      "severity": "medium",
+      "explanation_ar": "اقتباس منسوب — لا يُعادت صياغته.",
+      "requires_editor_review": true,
+      "must_be_quoted": true,
+      "skip_if_quoted": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "span": "تمويلات أجنبية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "اتهام بالتمويل الأجنبي دون وثائق أو أدلة ظاهرة في النص.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "دليلاً واضحاً",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تحويل تصريح سياسي إلى «دليل واضح» بصوت الكاتب يحتاج مراجعة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "ولا شك أن",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تأكيد قطعي بصوت الناشر دون إسناد كافٍ.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "ومن الواضح أن",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "استنتاج تحليلي بصوت الناشر داخل خبر.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "كدروع بشرية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "استنتاج غير مدعوم بما يكفي.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "أكدوا بلا شك",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "قطع بعد تعذر التحقق المستقل.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "المؤشرات كلها تؤكد",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تأكيد قطعي دون تحديد المؤشرات.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "آمنة بنسبة 100%",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "ادعاء يقين مطلق.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "لا يمكن الوثوق بتقاريرها",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "مهاجمة المصدر بدل مناقشة الأدلة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "تمويلها من جهات أجنبية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "اتهام تمويل أجنبي دون أدلة ظاهرة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "أدلة قاطعة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "ادعاء امتلاك أدلة دون نشرها.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "حملة سياسية",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "اتهام بدافع سياسي دون دليل.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "لم يتم التحقق",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "استخدام مواد غير متحقق منها.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "ويؤكد ذلك",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT",
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تحويل قرائن إلى حقيقة بصوت الناشر.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "تكشف تورط",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "العنوان يجزم بتورط بينما التحقيق أولي.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "ارتباطاتها المشبوهة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK",
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "اتهام غير مثبت بصوت الناشر.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "أثبتته الاحتجاجات",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "الاحتجاجات لا تثبت الادعاء.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "أصبح من المؤكد",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT",
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "جزم بعد نفي الاتفاق النهائي.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "أكد أنه وافق",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "مرجع الضمير غامض؛ يحتاج إعادة صياغة.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "سيستقيل غدًا",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "معلومة مستقبلية بصيغة مؤكدة أكثر من اللازم.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "الوزير السابق كان أحد المستفيدين",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK",
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "اتهام غير مباشر لشخص مسمّى عبر التزامن الزمني.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "زيارته ستستمر",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_SOURCE_VAGUE"
+      ],
+      "category": "attribution",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "مرجع الضمير قد يلتبس بين شخصين متشابهين.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "ويعني ذلك أن الحكومة خفضت البطالة فعلًا",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تجاهل التفسير البديل وتحويله إلى حقيقة.",
+      "requires_editor_review": true,
+      "must_be_quoted": false
+    }
+  ],
+  "overgeneralizations": [
+    {
+      "span": "الشعب يقف بالكامل خلف الرئيس والحكومة",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تعميم غير مثبت عن موقف «الشعب بالكامل».",
+      "requires_editor_review": true
+    },
+    {
+      "span": "معظم المواطنين يرفضون",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "تعميم عن موقف معظم المواطنين دون بيانات.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "المستثمرين يتسابقون",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "soft_warning",
+      "severity": "medium",
+      "explanation_ar": "تعميم غير مثبت.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "إجماعاً وطنياً",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تعميم لا ينسجم مع نسب منافسة معتبرة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "إجماع كامل",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تعميم لا ينسجم مع نسب منافسة معتبرة.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "غضبًا شعبيًا واسعًا",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "تعميم بلا بيانات.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "فقدت بالفعل شرعيتها",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE",
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "حكم تحريري بصوت الناشر.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    },
+    {
+      "span": "الشعب أقر القانون",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_OVERGENERALIZE",
+        "R_PUBLISHER_FACT"
+      ],
+      "category": "publisher_voice",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "مجاز سياسي يُقدَّم كحقيقة مباشرة.",
+      "requires_editor_review": true,
+      "must_be_quoted": false,
+      "skip_if_quoted": false
+    }
+  ],
+  "coup_inference": [
+    {
+      "span": "يخطط للإنقلاب",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "استنتاج انقلاب من تصريح سياسي يحتاج تمييزاً أوضح بين الصوت والاستنتاج.",
+      "requires_editor_review": true
+    },
+    {
+      "span": "يخطط للانقلاب",
+      "suggested_text": null,
+      "rule_ids": [
+        "R_EVIDENCE_WEAK"
+      ],
+      "category": "unsupported_certainty",
+      "decision": "hard_warning",
+      "severity": "high",
+      "explanation_ar": "استنتاج انقلاب من تصريح سياسي يحتاج تمييزاً أوضح بين الصوت والاستنتاج.",
+      "requires_editor_review": true
+    }
+  ]
+}

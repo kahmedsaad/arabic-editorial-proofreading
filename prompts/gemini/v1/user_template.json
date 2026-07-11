@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "notes": "User payload is assembled in code. This file documents expected fields.",
+  "fields": [
+    "document_id",
+    "segments",
+    "mechanical_findings",
+    "rules",
+    "entities",
+    "output_schema"
+  ]
+}

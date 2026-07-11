@@ -1,0 +1,9 @@
+{
+  "entity_id": "E_REUTERS",
+  "canonical_ar": "رويترز",
+  "aliases": [
+    "وكالة رويترز"
+  ],
+  "category": "organization",
+  "active": true
+}

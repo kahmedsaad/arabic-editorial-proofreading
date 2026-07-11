@@ -1,0 +1,13 @@
+{
+  "rule_id": "R07",
+  "version": "1.0",
+  "title_ar": "تأطير تعليق الصورة",
+  "category": "caption_framing",
+  "rule_type": "relational",
+  "description_ar": "تعليق الصورة لا يضيف تأطيراً غير منسوب يتجاوز ما تظهره الصورة.",
+  "applies_to_zones": ["caption", "body"],
+  "severity": "high",
+  "keywords": ["ترهيب", "لترهيب"],
+  "examples": [],
+  "active": true
+}

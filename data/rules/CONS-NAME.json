@@ -1,0 +1,16 @@
+{
+  "rule_id": "CONS-NAME",
+  "version": "1.0",
+  "title_ar": "تضارب أسماء/أدوار",
+  "category": "consistency",
+  "rule_type": "relational",
+  "description_ar": "تضارب في أسماء المسؤولين أو أدوارهم.",
+  "applies_to_zones": [
+    "body",
+    "headline"
+  ],
+  "severity": "high",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

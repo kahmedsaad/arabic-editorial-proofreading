@@ -1,0 +1,15 @@
+Read PROJECT_CONTEXT.md and inspect data/pairs.zip.
+
+Implement the dataset importer only.
+
+Requirements:
+- Extract matching BEFORE/AFTER Arabic files safely.
+- Preserve original files unchanged.
+- Detect likely matching pairs by filename.
+- Support TXT and HTML-like text.
+- Align paragraphs conservatively.
+- Produce JSONL with pair_id, original_text, corrected_text, diff spans, source, and requires_human_classification=true.
+- Do not assume every change is proofreading.
+- Add tests using small fixtures.
+- Add a CLI command and README instructions.
+- Do not modify the AI pipeline in this task.

@@ -1,0 +1,19 @@
+{
+  "rule_id": "ATTR-001",
+  "version": "1.0",
+  "title_ar": "الحفاظ على نسبة القول إلى المصدر",
+  "category": "attribution",
+  "rule_type": "relational",
+  "description_ar": "يجب ألا يتحول قول منسوب إلى مصدر إلى حقيقة مقررة بصوت الناشر.",
+  "applies_to_zones": ["headline", "body", "quote", "source_attribution"],
+  "severity": "high",
+  "keywords": ["قال", "ذكر", "أفاد", "زعم", "ادعى", "أكد", "بحسب", "حسب"],
+  "examples": [
+    {
+      "input": "الحكومة مسؤولة عن الأزمة.",
+      "preferred": "وحمّل المصدر الحكومة مسؤولية الأزمة.",
+      "reason": "الحفاظ على نسبة الادعاء إلى مصدره."
+    }
+  ],
+  "active": true
+}

@@ -1,0 +1,14 @@
+Read PROJECT_CONTEXT.md and the working local engine.
+
+Add optional GCP adapters without breaking local mode.
+
+Implement:
+- Cloud Storage adapter for uploaded documents and datasets.
+- Firestore adapter for rules and review results.
+- Vertex AI Gemini configuration.
+- Cloud Run-ready Dockerfile and deployment instructions.
+- Environment-based switching with USE_GCP and AI_CLIENT.
+- Health checks and startup validation.
+
+Do not add GKE, Pub/Sub, queues, authentication, or production hardening.
+Local mode and all unit tests must continue to work without GCP.

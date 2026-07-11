@@ -1,0 +1,13 @@
+{
+  "rule_id": "R03",
+  "version": "1.0",
+  "title_ar": "وصف الميليشيا",
+  "category": "loaded_framing",
+  "rule_type": "relational",
+  "description_ar": "لا تُطلق أوصاف الميليشيا بشكل آلي على كيانات الصراع الحساسة.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "high",
+  "keywords": ["ميليشيا", "الميليشيا", "ميليشيات"],
+  "examples": [],
+  "active": true
+}

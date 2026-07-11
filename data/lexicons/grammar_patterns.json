@@ -1,0 +1,89 @@
+{
+  "version": "1",
+  "patterns": [
+    {
+      "span": "قام المتظاهرين",
+      "suggested_text": "قام المتظاهرون",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "خطأ نحوي: الفاعل مرفوع بعد قام.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "لم يتسنى",
+      "suggested_text": "لم يتسنَّ",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "صياغة نحوية أدق: لم يتسنَّ.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "أعتبر آخرين",
+      "suggested_text": "اعتبر آخرون",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "خطأ نحوي في الفعل والفاعل.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "إلى مزيداً",
+      "suggested_text": "إلى مزيدٍ",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "خطأ إعرابي بعد حرف الجر إلى.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "لم تنتهي بعد",
+      "suggested_text": "لم تنتهِ بعد",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "suggest",
+      "severity": "low",
+      "explanation_ar": "جزم المضارع بعد لم.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "مخزون كافي",
+      "suggested_text": "مخزون كافٍ",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "خطأ نحوي شائع: كافٍ لا كافي.",
+      "requires_editor_review": false
+    },
+    {
+      "span": "مصادر مطلعة، طلبت عدم الكشف عن هويته",
+      "suggested_text": "مصادر مطلعة، طلبت عدم الكشف عن هويتها",
+      "rule_ids": [
+        "MECH-GRAMMAR"
+      ],
+      "category": "grammar",
+      "decision": "replace",
+      "severity": "medium",
+      "explanation_ar": "عدم تطابق الجمع/المفرد: مصادر مقابل هويته.",
+      "requires_editor_review": false
+    }
+  ]
+}

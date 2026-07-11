@@ -1,0 +1,13 @@
+{
+  "rule_id": "R04",
+  "version": "1.0",
+  "title_ar": "إسناد الدعم الخارجي",
+  "category": "attribution",
+  "rule_type": "relational",
+  "description_ar": "ادعاء الدعم الخارجي يحتاج إسناداً واضحاً بمصدر مسمى.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "high",
+  "keywords": ["مدعومة من الخارج", "بدعم خارجي"],
+  "examples": [],
+  "active": true
+}

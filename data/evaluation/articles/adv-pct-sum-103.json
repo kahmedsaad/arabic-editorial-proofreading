@@ -1,0 +1,18 @@
+{
+  "article_id": "adv-pct-sum-103",
+  "title": "نتائج أولية",
+  "language": "ar",
+  "content_type": "news",
+  "sections": [
+    {
+      "section_id": "headline",
+      "surface": "headline",
+      "text": "نتائج أولية"
+    },
+    {
+      "section_id": "p1",
+      "surface": "lead",
+      "text": "حصل المرشح الأول على 48% والثاني على 47%، بينما توزعت النسبة المتبقية البالغة 8% على بقية المرشحين."
+    }
+  ]
+}

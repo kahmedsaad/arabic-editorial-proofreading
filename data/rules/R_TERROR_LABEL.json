@@ -1,0 +1,13 @@
+{
+  "rule_id": "R_TERROR_LABEL",
+  "version": "1.0",
+  "title_ar": "وصف إرهابي",
+  "category": "loaded_framing",
+  "rule_type": "relational",
+  "description_ar": "لا تُسقط أوصاف الإرهاب على طرف صراع حساس بصوت الناشر؛ داخل الاقتباس تُحفظ الصياغة.",
+  "applies_to_zones": ["headline", "body", "quote"],
+  "severity": "critical",
+  "keywords": ["إرهابية", "إرهابي", "منظمة إرهابية"],
+  "examples": [],
+  "active": true
+}

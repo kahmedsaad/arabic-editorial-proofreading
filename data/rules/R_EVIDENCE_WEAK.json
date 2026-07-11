@@ -1,0 +1,20 @@
+{
+  "rule_id": "R_EVIDENCE_WEAK",
+  "version": "1.0",
+  "title_ar": "استنتاج بلا دليل كافٍ",
+  "category": "unsupported_certainty",
+  "rule_type": "relational",
+  "description_ar": "ادعاء أو استنتاج قوي دون أدلة ظاهرة.",
+  "applies_to_zones": [
+    "body",
+    "headline"
+  ],
+  "severity": "high",
+  "keywords": [
+    "دليلاً",
+    "تمويلات",
+    "انقلاب"
+  ],
+  "examples": [],
+  "active": true
+}

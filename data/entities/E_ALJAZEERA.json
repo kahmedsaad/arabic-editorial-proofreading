@@ -1,0 +1,10 @@
+{
+  "entity_id": "E_ALJAZEERA",
+  "canonical_ar": "الجزيرة نت",
+  "aliases": [
+    "الجزيره نت",
+    "الجزيره"
+  ],
+  "category": "organization",
+  "active": true
+}

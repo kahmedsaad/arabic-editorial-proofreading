@@ -1,0 +1,13 @@
+{
+  "rule_id": "R_ATTR_CONFIRMATION",
+  "version": "1.0",
+  "title_ar": "قوة فعل التأكيد مع مصدر واحد",
+  "category": "attribution_strength",
+  "rule_type": "relational",
+  "description_ar": "لا تستخدم أفعال تأكيد قوية عندما يستند الادعاء إلى مصدر واحد.",
+  "applies_to_zones": ["body"],
+  "severity": "medium",
+  "keywords": ["تأكيد", "تأكيده", "أكد", "أكدت"],
+  "examples": [],
+  "active": true
+}

@@ -1,0 +1,14 @@
+{
+  "rule_id": "CONS-CLAIM",
+  "version": "1.0",
+  "title_ar": "تناقض ادعاءات داخل المقال",
+  "category": "consistency",
+  "rule_type": "consistency",
+  "description_ar": "رصد تعارض ادعاءين متعارضين داخل النص ذاته.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "high",
+  "decision_default": "hard_warning",
+  "examples": [],
+  "aliases": [],
+  "tags": ["consistency", "claims"]
+}

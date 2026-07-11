@@ -1,0 +1,18 @@
+{
+  "article_id": "adv-similar-names",
+  "title": "لقاء وزاري",
+  "language": "ar",
+  "content_type": "news",
+  "sections": [
+    {
+      "section_id": "headline",
+      "surface": "headline",
+      "text": "لقاء وزاري"
+    },
+    {
+      "section_id": "p1",
+      "surface": "lead",
+      "text": "اجتمع وزير الخارجية سامر خليل مع رئيس الوزراء سامر جليل، وقال خليل إنه سيزور العاصمة الأسبوع المقبل. وأضاف جليل أن زيارته ستستمر يومين."
+    }
+  ]
+}

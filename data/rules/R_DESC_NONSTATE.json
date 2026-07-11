@@ -1,0 +1,19 @@
+{
+  "rule_id": "R_DESC_NONSTATE",
+  "version": "1.0",
+  "title_ar": "وصف المقاتل للكيان غير الحكومي",
+  "category": "entity_name",
+  "rule_type": "relational",
+  "description_ar": "استخدم وصفاً محايداً مثل عناصر بدل مقاتل عند الحديث عن حزب الله بصوت الناشر.",
+  "applies_to_zones": ["headline", "body"],
+  "severity": "high",
+  "keywords": ["مقاتل", "مقاتليه", "مقاتلي", "مقاتليها"],
+  "examples": [
+    {
+      "input": "مقتل أحد مقاتليه",
+      "preferred": "مقتل أحد عناصره",
+      "reason": "وصف محايد في صوت الجزيرة."
+    }
+  ],
+  "active": true
+}

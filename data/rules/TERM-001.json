@@ -1,0 +1,19 @@
+{
+  "rule_id": "TERM-001",
+  "version": "1.0",
+  "title_ar": "تفضيل المصطلح المعتمد",
+  "category": "terminology",
+  "rule_type": "lexical",
+  "description_ar": "استخدم الصيغة المصطلحية المعتمدة عند وجود بدائل شائعة غير دقيقة.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "medium",
+  "keywords": ["لائكية", "علمانية", "مدنية"],
+  "examples": [
+    {
+      "input": "تونس دولة لائكية",
+      "preferred": "تونس دولة مدنية",
+      "reason": "التمييز بين الصيغ بحسب السياق الدستوري."
+    }
+  ],
+  "active": true
+}

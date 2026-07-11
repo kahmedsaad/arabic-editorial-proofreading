@@ -1,0 +1,16 @@
+{
+  "rule_id": "CONS-DATE",
+  "version": "1.0",
+  "title_ar": "تعارض تاريخ",
+  "category": "consistency",
+  "rule_type": "relational",
+  "description_ar": "يوم الأسبوع لا يطابق التاريخ المذكور.",
+  "applies_to_zones": [
+    "body",
+    "headline"
+  ],
+  "severity": "high",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

@@ -1,0 +1,19 @@
+{
+  "rule_id": "R_OVERGENERALIZE",
+  "version": "1.0",
+  "title_ar": "تعميم غير مثبت",
+  "category": "unsupported_certainty",
+  "rule_type": "relational",
+  "description_ar": "تعميم عن موقف الجمهور دون بيانات.",
+  "applies_to_zones": [
+    "body"
+  ],
+  "severity": "high",
+  "keywords": [
+    "الشعب",
+    "بالكامل",
+    "معظم المواطنين"
+  ],
+  "examples": [],
+  "active": true
+}

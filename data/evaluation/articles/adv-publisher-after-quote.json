@@ -1,0 +1,18 @@
+{
+  "article_id": "adv-publisher-after-quote",
+  "title": "تصريح وزير",
+  "language": "ar",
+  "content_type": "news",
+  "sections": [
+    {
+      "section_id": "headline",
+      "surface": "headline",
+      "text": "تصريح وزير"
+    },
+    {
+      "section_id": "p1",
+      "surface": "lead",
+      "text": "قال الوزير إن المعارضة «تعمل ضد الوطن». وهذا بالفعل ما تثبته مواقفها الأخيرة."
+    }
+  ]
+}

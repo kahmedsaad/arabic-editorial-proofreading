@@ -1,0 +1,92 @@
+{
+  "name": "benchmark_tuning_v1",
+  "note": "Separate from hidden benchmark_v2. Do not copy hidden gold here.",
+  "cases": [
+    {
+      "case_id": "tune-0001",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "خلال يوم",
+        "تحت السيطرة",
+        "حظر"
+      ]
+    },
+    {
+      "case_id": "tune-0002",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "إجماعاً شعبياً",
+        "خانت الوطن"
+      ]
+    },
+    {
+      "case_id": "tune-0003",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "تلغي",
+        "تأجيل"
+      ]
+    },
+    {
+      "case_id": "tune-0004",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "أغلبية",
+        "الشعب أقر"
+      ]
+    },
+    {
+      "case_id": "tune-0005",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "أكد أنه وافق",
+        "سابق لأوانه"
+      ]
+    },
+    {
+      "case_id": "tune-0006",
+      "clean": true,
+      "quote_preserve": false,
+      "expect_needles": []
+    },
+    {
+      "case_id": "tune-0007",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "نهائي",
+        "استئناف"
+      ]
+    },
+    {
+      "case_id": "tune-0008",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "الارتفاع من 3.2"
+      ]
+    },
+    {
+      "case_id": "tune-0009",
+      "clean": false,
+      "quote_preserve": true,
+      "expect_needles": [
+        "فاسدة"
+      ]
+    },
+    {
+      "case_id": "tune-0010",
+      "clean": false,
+      "quote_preserve": false,
+      "expect_needles": [
+        "بحسب مصادر",
+        "سيستقيل"
+      ]
+    }
+  ]
+}

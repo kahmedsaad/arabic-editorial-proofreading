@@ -1,0 +1,9 @@
+{
+  "entity_id": "E_NYT",
+  "canonical_ar": "نيويورك تايمز",
+  "aliases": [
+    "نيورك تايمز"
+  ],
+  "category": "organization",
+  "active": true
+}

@@ -1,0 +1,17 @@
+{
+  "rule_id": "MECH-GRAMMAR",
+  "version": "1.0",
+  "title_ar": "تصحيح نحوي",
+  "category": "grammar",
+  "rule_type": "mechanical",
+  "description_ar": "أخطاء نحوية شائعة قابلة للتصحيح الآلي.",
+  "applies_to_zones": [
+    "headline",
+    "body",
+    "caption"
+  ],
+  "severity": "medium",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

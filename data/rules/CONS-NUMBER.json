@@ -1,0 +1,15 @@
+{
+  "rule_id": "CONS-NUMBER",
+  "version": "1.0",
+  "title_ar": "تعارض أرقام",
+  "category": "consistency",
+  "rule_type": "relational",
+  "description_ar": "أرقام أو مجاميع متعارضة داخل المقال.",
+  "applies_to_zones": [
+    "body"
+  ],
+  "severity": "high",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

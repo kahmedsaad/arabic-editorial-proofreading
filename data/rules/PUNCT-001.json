@@ -1,0 +1,13 @@
+{
+  "rule_id": "PUNCT-001",
+  "version": "1.0",
+  "title_ar": "اتساق الترقيم",
+  "category": "punctuation",
+  "rule_type": "lexical",
+  "description_ar": "تجنب المسافات الخاطئة وتكرار علامات الترقيم.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "low",
+  "keywords": [],
+  "examples": [],
+  "active": true
+}

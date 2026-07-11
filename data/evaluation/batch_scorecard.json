@@ -1,0 +1,710 @@
+{
+  "client": "mock",
+  "articles": [
+    {
+      "article_id": "custom-marfa-chaos-v1",
+      "hits": 12,
+      "total": 12,
+      "score": "12/12",
+      "pct": 100.0,
+      "findings_count": 48,
+      "misses": [],
+      "details": [
+        {
+          "id": "spell_مسؤليين",
+          "needle": "مسؤليين",
+          "hit": true
+        },
+        {
+          "id": "gram_قام_المتظاهرين",
+          "needle": "قام المتظاهرين",
+          "hit": true
+        },
+        {
+          "id": "num_split",
+          "needle": "بينهم 22",
+          "hit": true
+        },
+        {
+          "id": "date_conflict",
+          "needle": "الأربعاء",
+          "hit": true
+        },
+        {
+          "id": "name_conflict",
+          "needle": "رئيس الوزراء",
+          "hit": true
+        },
+        {
+          "id": "vague_source",
+          "needle": "مصادر مطلعه",
+          "hit": true
+        },
+        {
+          "id": "bias_مخربين",
+          "needle": "المخربين",
+          "hit": true
+        },
+        {
+          "id": "terror_label",
+          "needle": "الجماعات الإرهابية",
+          "hit": true
+        },
+        {
+          "id": "foreign_funding",
+          "needle": "تمويلات أجنبية",
+          "hit": true
+        },
+        {
+          "id": "overgen_شعب",
+          "needle": "الشعب يقف",
+          "hit": true
+        },
+        {
+          "id": "publisher_voice",
+          "needle": "ولا شك",
+          "hit": true
+        },
+        {
+          "id": "caption_bias",
+          "needle": "المخربة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "econ-plains-v1",
+      "hits": 14,
+      "total": 14,
+      "score": "14/14",
+      "pct": 100.0,
+      "findings_count": 14,
+      "misses": [],
+      "details": [
+        {
+          "id": "spell_الإنهيار",
+          "needle": "الإنهيار",
+          "hit": true
+        },
+        {
+          "id": "spell_الإقتصادية",
+          "needle": "الإقتصادية",
+          "hit": true
+        },
+        {
+          "id": "spell_تشوية",
+          "needle": "تشوية",
+          "hit": true
+        },
+        {
+          "id": "claim_growth_vs_decline",
+          "needle": "تراجع الناتج",
+          "hit": true
+        },
+        {
+          "id": "pct_inflation",
+          "needle": "تضخم",
+          "hit": true
+        },
+        {
+          "id": "claim_tax_vs_fee",
+          "needle": "رسم تنمية",
+          "hit": true
+        },
+        {
+          "id": "foreign_funding",
+          "needle": "تمويلها من جهات أجنبية",
+          "hit": true
+        },
+        {
+          "id": "inflam_أكاذيب",
+          "needle": "أكاذيب",
+          "hit": true
+        },
+        {
+          "id": "inflam_أعداء",
+          "needle": "أعداء الوطن",
+          "hit": true
+        },
+        {
+          "id": "inflam_مكاسب",
+          "needle": "مكاسب سياسية رخيصة",
+          "hit": true
+        },
+        {
+          "id": "vague_indicators",
+          "needle": "المؤشرات كلها تؤكد",
+          "hit": true
+        },
+        {
+          "id": "overgen_investors",
+          "needle": "المستثمرين يتسابقون",
+          "hit": true
+        },
+        {
+          "id": "pct_unemployment",
+          "needle": "بطالة",
+          "hit": true
+        },
+        {
+          "id": "unemployed_trend",
+          "needle": "انخفض رغم زيادة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "north-border-v1",
+      "hits": 14,
+      "total": 14,
+      "score": "14/14",
+      "pct": 100.0,
+      "findings_count": 17,
+      "misses": [],
+      "details": [
+        {
+          "id": "spell_إعتداءات",
+          "needle": "إعتداءات",
+          "hit": true
+        },
+        {
+          "id": "style_مليشيات",
+          "needle": "مليشيات",
+          "hit": true
+        },
+        {
+          "id": "claim_verify_vs_sure",
+          "needle": "بلا شك",
+          "hit": true
+        },
+        {
+          "id": "claim_human_shields",
+          "needle": "دروع بشرية",
+          "hit": true
+        },
+        {
+          "id": "math_military",
+          "needle": "خسائر عسكرية",
+          "hit": true
+        },
+        {
+          "id": "math_civilians",
+          "needle": "مدنيين",
+          "hit": true
+        },
+        {
+          "id": "claim_no_residential",
+          "needle": "المناطق السكنية",
+          "hit": true
+        },
+        {
+          "id": "terror_label",
+          "needle": "العصابات الإرهابية",
+          "hit": true
+        },
+        {
+          "id": "claim_ended_vs_renew",
+          "needle": "تجدد القتال",
+          "hit": true
+        },
+        {
+          "id": "claim_thousands",
+          "needle": "تجمعات محدودة",
+          "hit": true
+        },
+        {
+          "id": "claim_peace_vs_force",
+          "needle": "القوة هي اللغة",
+          "hit": true
+        },
+        {
+          "id": "attack_ngos",
+          "needle": "لا يمكن الوثوق",
+          "hit": true
+        },
+        {
+          "id": "bias_يسحق",
+          "needle": "يسحق",
+          "hit": true
+        },
+        {
+          "id": "bias_نصر",
+          "needle": "النصر الساحق",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "elections-v1",
+      "hits": 9,
+      "total": 9,
+      "score": "9/9",
+      "pct": 100.0,
+      "findings_count": 13,
+      "misses": [],
+      "details": [
+        {
+          "id": "spell_إنتخابات",
+          "needle": "إنتخابات",
+          "hit": true
+        },
+        {
+          "id": "turnout_math",
+          "needle": "من أصل",
+          "hit": true
+        },
+        {
+          "id": "claim_minor_violations",
+          "needle": "تعطيل التصويت في 120",
+          "hit": true
+        },
+        {
+          "id": "overgen_consensus",
+          "needle": "إجماع",
+          "hit": true
+        },
+        {
+          "id": "evidence_قاطععة",
+          "needle": "أدلة قاطعة",
+          "hit": true
+        },
+        {
+          "id": "inflam_فرحة",
+          "needle": "فرحة الشعب",
+          "hit": true
+        },
+        {
+          "id": "inflam_إرادة",
+          "needle": "الإرادة الوطنية",
+          "hit": true
+        },
+        {
+          "id": "claim_praise_vs_violations",
+          "needle": "مخالفات خطيرة",
+          "hit": true
+        },
+        {
+          "id": "date_conflict",
+          "needle": "الأحد",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "health-wave-v1",
+      "hits": 10,
+      "total": 10,
+      "score": "10/10",
+      "pct": 100.0,
+      "findings_count": 10,
+      "misses": [],
+      "details": [
+        {
+          "id": "claim_ended_vs_ready",
+          "needle": "رفع درجة الاستعداد",
+          "hit": true
+        },
+        {
+          "id": "case_rate",
+          "needle": "خلال يوم",
+          "hit": true
+        },
+        {
+          "id": "claim_100pct",
+          "needle": "آمنة بنسبة 100%",
+          "hit": true
+        },
+        {
+          "id": "claim_side_effects",
+          "needle": "43 بلاغاً",
+          "hit": true
+        },
+        {
+          "id": "gram_كافي",
+          "needle": "كافي",
+          "hit": true
+        },
+        {
+          "id": "attack_doctors",
+          "needle": "حملة سياسية",
+          "hit": true
+        },
+        {
+          "id": "unverified_images",
+          "needle": "لم يتم التحقق",
+          "hit": true
+        },
+        {
+          "id": "deaths_conflict",
+          "needle": "الوفيات",
+          "hit": true
+        },
+        {
+          "id": "claim_control_vs_curfew",
+          "needle": "حظر تجول",
+          "hit": true
+        },
+        {
+          "id": "inflam_ذعر",
+          "needle": "تنشر الذعر",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "indirect-accusation-v1",
+      "hits": 3,
+      "total": 3,
+      "score": "3/3",
+      "pct": 100.0,
+      "findings_count": 6,
+      "misses": [],
+      "details": [
+        {
+          "id": "title_overclaim",
+          "needle": "تكشف تورط",
+          "hit": true
+        },
+        {
+          "id": "correlation_as_fact",
+          "needle": "ويؤكد ذلك",
+          "hit": true
+        },
+        {
+          "id": "named_risk",
+          "needle": "الوزير السابق كان أحد المستفيدين",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "quoted-incitement-v1",
+      "hits": 4,
+      "total": 4,
+      "score": "4/4",
+      "pct": 100.0,
+      "findings_count": 6,
+      "misses": [],
+      "details": [
+        {
+          "id": "publisher_anger",
+          "needle": "غضبًا شعبيًا",
+          "hit": true
+        },
+        {
+          "id": "publisher_legitimacy",
+          "needle": "شرعيتها",
+          "hit": true
+        },
+        {
+          "id": "publisher_suspicious",
+          "needle": "ارتباطاتها المشبوهة",
+          "hit": true
+        },
+        {
+          "id": "quote_preserve_clients",
+          "needle": "مجموعة من العملاء",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "name-date-chaos-v1",
+      "hits": 4,
+      "total": 4,
+      "score": "4/4",
+      "pct": 100.0,
+      "findings_count": 4,
+      "misses": [],
+      "details": [
+        {
+          "id": "date_18",
+          "needle": "18",
+          "hit": true
+        },
+        {
+          "id": "timeline_weeks_vs_days",
+          "needle": "قبل يومين",
+          "hit": true
+        },
+        {
+          "id": "similar_names",
+          "needle": "منصور",
+          "hit": true
+        },
+        {
+          "id": "role_conflict",
+          "needle": "رئيس دولة ورئيس حكومة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "labor-context-math-v1",
+      "hits": 4,
+      "total": 4,
+      "score": "4/4",
+      "pct": 100.0,
+      "findings_count": 5,
+      "misses": [],
+      "details": [
+        {
+          "id": "employed_direction",
+          "needle": "الارتفاع من 4.1",
+          "hit": true
+        },
+        {
+          "id": "unemployed_direction",
+          "needle": "الانخفاض من 620",
+          "hit": true
+        },
+        {
+          "id": "participation_direction",
+          "needle": "ارتفاع النسبة",
+          "hit": true
+        },
+        {
+          "id": "ignore_alt_explanation",
+          "needle": "خفضت البطالة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "pronoun-source-v1",
+      "hits": 3,
+      "total": 3,
+      "score": "3/3",
+      "pct": 100.0,
+      "findings_count": 7,
+      "misses": [],
+      "details": [
+        {
+          "id": "title_overclaim",
+          "needle": "وافقت",
+          "hit": true
+        },
+        {
+          "id": "pronoun_ambiguous",
+          "needle": "أكد أنه وافق",
+          "hit": true
+        },
+        {
+          "id": "certainty_vs_official",
+          "needle": "أصبح من المؤكد",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "majority-precision-v1",
+      "hits": 2,
+      "total": 2,
+      "score": "2/2",
+      "pct": 100.0,
+      "findings_count": 3,
+      "misses": [],
+      "details": [
+        {
+          "id": "majority_not_absolute",
+          "needle": "أغلبية",
+          "hit": true
+        },
+        {
+          "id": "people_approved",
+          "needle": "الشعب أقر القانون",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "clean-talks-v1",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 1,
+      "misses": [],
+      "details": [
+        {
+          "id": "low_false_positives",
+          "needle": "__LOW_FP__",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-protests-prove-fraud",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 1,
+      "misses": [],
+      "details": [
+        {
+          "id": "protests_not_proof",
+          "needle": "أثبتته الاحتجاجات",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-quote-preserve-corrupt",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 2,
+      "misses": [],
+      "details": [
+        {
+          "id": "preserve_فاسدة",
+          "needle": "__QUOTE_PRESERVE__:فاسدة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-synonym-trap",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 2,
+      "misses": [],
+      "details": [
+        {
+          "id": "no_طفيفة",
+          "needle": "__NO_SUGGEST__:طفيفة",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-vague-future",
+      "hits": 2,
+      "total": 2,
+      "score": "2/2",
+      "pct": 100.0,
+      "findings_count": 2,
+      "misses": [],
+      "details": [
+        {
+          "id": "vague_source",
+          "needle": "بحسب مصادر",
+          "hit": true
+        },
+        {
+          "id": "future_certainty",
+          "needle": "سيستقيل",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-plural-singular",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 1,
+      "misses": [],
+      "details": [
+        {
+          "id": "grammar_هوية",
+          "needle": "هويته",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-final-vs-appeal",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 1,
+      "misses": [],
+      "details": [
+        {
+          "id": "final_vs_appeal",
+          "needle": "الاستئناف",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-pct-sum-103",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 1,
+      "misses": [],
+      "details": [
+        {
+          "id": "pct_overflow",
+          "needle": "100%",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-title-cancel-defer",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 2,
+      "misses": [],
+      "details": [
+        {
+          "id": "cancel_vs_defer",
+          "needle": "تأجيل",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-publisher-after-quote",
+      "hits": 2,
+      "total": 2,
+      "score": "2/2",
+      "pct": 100.0,
+      "findings_count": 3,
+      "misses": [],
+      "details": [
+        {
+          "id": "publisher_adopts",
+          "needle": "وهذا بالفعل ما تثبته",
+          "hit": true
+        },
+        {
+          "id": "quote_ok",
+          "needle": "__QUOTE_PRESERVE__:تعمل ضد الوطن",
+          "hit": true
+        }
+      ]
+    },
+    {
+      "article_id": "adv-similar-names",
+      "hits": 1,
+      "total": 1,
+      "score": "1/1",
+      "pct": 100.0,
+      "findings_count": 2,
+      "misses": [],
+      "details": [
+        {
+          "id": "similar_names",
+          "needle": "سامر",
+          "hit": true
+        }
+      ]
+    }
+  ],
+  "overall_hits": 92,
+  "overall_total": 92,
+  "overall_score": "92/92"
+}

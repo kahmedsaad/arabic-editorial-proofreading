@@ -1,0 +1,19 @@
+{
+  "rule_id": "R_PUBLISHER_FACT",
+  "version": "1.0",
+  "title_ar": "صوت الناشر كحقيقة",
+  "category": "publisher_voice",
+  "rule_type": "relational",
+  "description_ar": "تحويل التحليل أو الادعاء إلى حقيقة بصوت المؤسسة.",
+  "applies_to_zones": [
+    "body",
+    "headline"
+  ],
+  "severity": "high",
+  "keywords": [
+    "ولا شك",
+    "من الواضح"
+  ],
+  "examples": [],
+  "active": true
+}

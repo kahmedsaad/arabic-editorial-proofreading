@@ -1,0 +1,19 @@
+{
+  "rule_id": "ATTR-002",
+  "version": "1.0",
+  "title_ar": "تجنب تحويل المصادر المجهولة إلى حقائق",
+  "category": "attribution_strength",
+  "rule_type": "relational",
+  "description_ar": "العبارات مثل حسب مصادر أو قيل يجب ألا تتحول إلى تقرير قطعي بصوت الناشر.",
+  "applies_to_zones": ["headline", "body"],
+  "severity": "high",
+  "keywords": ["حسب مصادر", "قيل", "يزعم", "يقال", "مصادر مطلعة"],
+  "examples": [
+    {
+      "input": "حسب مصادر الحكومة فشلت.",
+      "preferred": "بحسب مصادر، فإن الحكومة فشلت.",
+      "reason": "الإبقاء على ضعف النسبة وعدم الجزم."
+    }
+  ],
+  "active": true
+}
