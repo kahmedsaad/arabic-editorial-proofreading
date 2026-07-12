@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     # Alef-variant soft warnings are noisy for POC demos; off by default.
     enable_letter_variant_warnings: bool = False
 
+    # Demo auth — read from .env on every startup (change ADMIN_PASSWORD there)
+    public_password: str = "demo"
+    admin_password: str = "302@Labs"
+    # When false, API is open (local tests). Set DEMO_AUTH_REQUIRED=true for gated demo.
+    demo_auth_required: bool = True
+
     # Gemini / GCP (Phase 4–7)
     gemini_model: str = "gemini-2.5-flash"
     gemini_api_key: str | None = None

@@ -18,7 +18,7 @@ type State = {
 const STORAGE_KEY = "aj-editor-lab/v1";
 
 const initialState: State = {
-  mode: "demo",
+  mode: "live",
   liveSettings: {
     baseUrl: "http://127.0.0.1:8001",
     apiKey: "",

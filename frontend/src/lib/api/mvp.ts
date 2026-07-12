@@ -1,9 +1,9 @@
 /**
  * MVP FastAPI client + Finding → Suggestion adapter.
- * Live Mode should call this instead of OpenAI phase loops.
  */
 
 import type { Article, Severity, Suggestion, SuggestionType } from "@/lib/types";
+import { authHeaders } from "@/lib/auth";
 
 export type MvpFinding = {
   finding_id: string;
@@ -18,10 +18,47 @@ export type MvpFinding = {
   start_offset: number;
   end_offset: number;
   rule_ids: string[];
+  entity_ids?: string[];
   explanation_ar: string;
   confidence: number;
   requires_editor_review: boolean;
   validation_status: string;
+  validation_errors?: string[];
+};
+
+export type MvpStage = {
+  stage_id: string;
+  label_ar: string;
+  status: string;
+  summary: Record<string, unknown>;
+};
+
+export type MvpRule = {
+  rule_id: string;
+  version: string;
+  title_ar: string;
+  category: string;
+  rule_type: string;
+  description_ar: string;
+  applies_to_zones: string[];
+  severity: string;
+  keywords: string[];
+  examples: Array<{ input: string; preferred: string; reason: string }>;
+  active: boolean;
+};
+
+export type MvpEntity = {
+  entity_id: string;
+  canonical_ar: string;
+  aliases: string[];
+  category: string;
+  active: boolean;
+  current_title?: string | null;
+  policy_profiles?: string[];
+  preferred_descriptors?: string[];
+  discouraged_descriptors?: string[];
+  version?: string;
+  last_verified?: string | null;
 };
 
 export type MvpReviewResponse = {
@@ -32,6 +69,10 @@ export type MvpReviewResponse = {
   rejected_findings: MvpFinding[];
   mechanical_finding_count: number;
   ai_finding_count: number;
+  stages?: MvpStage[];
+  retrieved_rules?: MvpRule[];
+  retrieved_entities?: MvpEntity[];
+  candidate_findings?: MvpFinding[];
 };
 
 const CATEGORY_TO_TYPE: Record<string, SuggestionType> = {
@@ -76,6 +117,24 @@ export function getMvpApiBase(override?: string): string {
   return (override || defaultApiBase()).replace(/\/$/, "");
 }
 
+async function apiFetch(path: string, init: RequestInit = {}, apiBase?: string) {
+  const base = getMvpApiBase(apiBase);
+  const headers: Record<string, string> = {
+    ...(init.headers as Record<string, string> | undefined),
+    ...authHeaders(),
+  };
+  if (init.body && !headers["content-type"]) {
+    headers["content-type"] = "application/json";
+  }
+  const res = await fetch(`${base}${path}`, { ...init, headers });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${path} failed (${res.status}): ${text.slice(0, 300)}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
 export function articleToReviewRequest(article: Article) {
   const headline =
     article.sections.find((s) => s.surface === "headline")?.text ?? article.title;
@@ -112,7 +171,6 @@ function locateAnchor(article: Article, finding: MvpFinding) {
       };
     }
   }
-  // Fallback: first section + reported offsets (may not highlight correctly)
   const fallback = article.sections[0];
   return {
     section_id: fallback?.section_id ?? finding.segment_id,
@@ -147,19 +205,21 @@ export function findingsToSuggestions(
       reason: f.explanation_ar || f.category,
       rule_ids: f.rule_ids ?? [],
       proof_steps: [
-        `source=${f.source}`,
         `decision=${f.decision}`,
         `validation=${f.validation_status}`,
         `confidence=${f.confidence}`,
-        `review_id=${reviewId}`,
       ],
       validator_status: f.validation_status === "valid" ? "passed" : "failed",
       validator_notes:
-        f.validation_status === "valid" ? undefined : [`status=${f.validation_status}`],
+        f.validation_status === "valid"
+          ? undefined
+          : f.validation_errors?.length
+            ? f.validation_errors
+            : [`status=${f.validation_status}`],
       status: "pending_human_review",
       requires_editor_approval: true as const,
       editor_note:
-        f.decision === "needs_editor_review" ? "يحتاج مراجعة المحرر (من المحرك)." : undefined,
+        f.decision === "needs_editor_review" ? "يحتاج مراجعة المحرر." : undefined,
     };
   });
 }
@@ -168,20 +228,16 @@ export async function createMvpReview(
   article: Article,
   apiBase?: string,
 ): Promise<MvpReviewResponse> {
-  const base = getMvpApiBase(apiBase);
-  const res = await fetch(`${base}/api/v1/reviews`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(articleToReviewRequest(article)),
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`MVP review failed (${res.status}): ${text.slice(0, 300)}`);
-  }
-  return (await res.json()) as MvpReviewResponse;
+  return (await apiFetch(
+    "/api/v1/reviews",
+    { method: "POST", body: JSON.stringify(articleToReviewRequest(article)) },
+    apiBase,
+  )) as MvpReviewResponse;
 }
 
-export async function checkMvpHealth(apiBase?: string): Promise<{ ok: boolean; body?: unknown; error?: string }> {
+export async function checkMvpHealth(
+  apiBase?: string,
+): Promise<{ ok: boolean; body?: unknown; error?: string }> {
   try {
     const base = getMvpApiBase(apiBase);
     const res = await fetch(`${base}/api/v1/health`);
@@ -190,4 +246,109 @@ export async function checkMvpHealth(apiBase?: string): Promise<{ ok: boolean; b
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+export async function loginMvp(username: string, password: string, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/auth/login",
+    { method: "POST", body: JSON.stringify({ username, password }) },
+    apiBase,
+  )) as { token: string; role: "user" | "admin"; username: string };
+}
+
+export async function logoutMvp(apiBase?: string) {
+  try {
+    await apiFetch("/api/v1/auth/logout", { method: "POST" }, apiBase);
+  } catch {
+    /* ignore */
+  }
+}
+
+export async function listRules(apiBase?: string) {
+  return (await apiFetch("/api/v1/rules", {}, apiBase)) as MvpRule[];
+}
+
+export async function upsertRule(rule: MvpRule, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/rules",
+    { method: "POST", body: JSON.stringify(rule) },
+    apiBase,
+  )) as MvpRule;
+}
+
+export async function bulkRules(text: string, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/rules/bulk",
+    { method: "POST", body: JSON.stringify({ text }) },
+    apiBase,
+  )) as MvpRule[];
+}
+
+export async function authorRules(text: string, confirm: boolean, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/rules/author",
+    { method: "POST", body: JSON.stringify({ text, confirm }) },
+    apiBase,
+  )) as { preview: MvpRule[]; saved: MvpRule[] };
+}
+
+export async function listEntities(apiBase?: string) {
+  return (await apiFetch("/api/v1/entities", {}, apiBase)) as MvpEntity[];
+}
+
+export async function upsertEntity(entity: MvpEntity, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/entities",
+    { method: "POST", body: JSON.stringify(entity) },
+    apiBase,
+  )) as MvpEntity;
+}
+
+export async function bulkEntities(text: string, apiBase?: string) {
+  return (await apiFetch(
+    "/api/v1/entities/bulk",
+    { method: "POST", body: JSON.stringify({ text }) },
+    apiBase,
+  )) as MvpEntity[];
+}
+
+export async function listPrompts(apiBase?: string) {
+  return (await apiFetch("/api/v1/admin/prompts", {}, apiBase)) as Array<{
+    phase: string;
+    body: string;
+    version: number;
+    updated_at: string;
+  }>;
+}
+
+export async function updatePrompt(phase: string, body: string, apiBase?: string) {
+  return await apiFetch(
+    `/api/v1/admin/prompts/${phase}`,
+    { method: "PUT", body: JSON.stringify({ body }) },
+    apiBase,
+  );
+}
+
+export async function setPublicPassword(password: string, apiBase?: string) {
+  return await apiFetch(
+    "/api/v1/admin/public-password",
+    { method: "POST", body: JSON.stringify({ password }) },
+    apiBase,
+  );
+}
+
+export async function sendFeedback(
+  payload: {
+    review_id: string;
+    finding_id: string;
+    action: "accept" | "reject" | "comment";
+    comment?: string;
+  },
+  apiBase?: string,
+) {
+  return await apiFetch(
+    "/api/v1/reviews/feedback",
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBase,
+  );
 }

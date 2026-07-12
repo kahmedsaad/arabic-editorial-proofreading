@@ -1,0 +1,15 @@
+{
+  "entity_id": "E_PASTE_7F7345",
+  "canonical_ar": "عمان",
+  "aliases": [
+    "سلطنة عمان، مسقط"
+  ],
+  "category": "general",
+  "active": true,
+  "current_title": null,
+  "policy_profiles": [],
+  "preferred_descriptors": [],
+  "discouraged_descriptors": [],
+  "version": "1.2",
+  "last_verified": null
+}

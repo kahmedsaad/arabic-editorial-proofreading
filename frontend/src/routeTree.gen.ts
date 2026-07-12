@@ -12,12 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as NewArticleRouteImport } from './routes/new-article'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LexicalRouteImport } from './routes/lexical'
 import { Route as GoldenRouteImport } from './routes/golden'
 import { Route as EntitiesRouteImport } from './routes/entities'
 import { Route as AuditRouteImport } from './routes/audit'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ReviewArticleIdRouteImport } from './routes/review.$articleId'
+import { Route as AdminLogsRouteImport } from './routes/admin.logs'
 import { Route as ReviewArticleIdIndexRouteImport } from './routes/review.$articleId.index'
 import { Route as ReviewArticleIdValidatorRouteImport } from './routes/review.$articleId.validator'
 import { Route as ReviewArticleIdSemanticRouteImport } from './routes/review.$articleId.semantic'
@@ -42,6 +46,11 @@ const NewArticleRoute = NewArticleRouteImport.update({
   path: '/new-article',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LexicalRoute = LexicalRouteImport.update({
   id: '/lexical',
   path: '/lexical',
@@ -62,15 +71,30 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ReviewArticleIdRoute = ReviewArticleIdRouteImport.update({
   id: '/review/$articleId',
   path: '/review/$articleId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLogsRoute = AdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ReviewArticleIdIndexRoute = ReviewArticleIdIndexRouteImport.update({
   id: '/',
@@ -118,14 +142,18 @@ const ReviewArticleIdEvaluationRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/audit': typeof AuditRoute
   '/entities': typeof EntitiesRoute
   '/golden': typeof GoldenRoute
   '/lexical': typeof LexicalRoute
+  '/login': typeof LoginRoute
   '/new-article': typeof NewArticleRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
+  '/admin/logs': typeof AdminLogsRoute
   '/review/$articleId': typeof ReviewArticleIdRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/review/$articleId/evaluation': typeof ReviewArticleIdEvaluationRoute
   '/review/$articleId/graph': typeof ReviewArticleIdGraphRoute
   '/review/$articleId/llm-packet': typeof ReviewArticleIdLlmPacketRoute
@@ -141,9 +169,12 @@ export interface FileRoutesByTo {
   '/entities': typeof EntitiesRoute
   '/golden': typeof GoldenRoute
   '/lexical': typeof LexicalRoute
+  '/login': typeof LoginRoute
   '/new-article': typeof NewArticleRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin': typeof AdminIndexRoute
   '/review/$articleId/evaluation': typeof ReviewArticleIdEvaluationRoute
   '/review/$articleId/graph': typeof ReviewArticleIdGraphRoute
   '/review/$articleId/llm-packet': typeof ReviewArticleIdLlmPacketRoute
@@ -156,14 +187,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/audit': typeof AuditRoute
   '/entities': typeof EntitiesRoute
   '/golden': typeof GoldenRoute
   '/lexical': typeof LexicalRoute
+  '/login': typeof LoginRoute
   '/new-article': typeof NewArticleRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
+  '/admin/logs': typeof AdminLogsRoute
   '/review/$articleId': typeof ReviewArticleIdRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/review/$articleId/evaluation': typeof ReviewArticleIdEvaluationRoute
   '/review/$articleId/graph': typeof ReviewArticleIdGraphRoute
   '/review/$articleId/llm-packet': typeof ReviewArticleIdLlmPacketRoute
@@ -177,14 +212,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/audit'
     | '/entities'
     | '/golden'
     | '/lexical'
+    | '/login'
     | '/new-article'
     | '/rules'
     | '/settings'
+    | '/admin/logs'
     | '/review/$articleId'
+    | '/admin/'
     | '/review/$articleId/evaluation'
     | '/review/$articleId/graph'
     | '/review/$articleId/llm-packet'
@@ -200,9 +239,12 @@ export interface FileRouteTypes {
     | '/entities'
     | '/golden'
     | '/lexical'
+    | '/login'
     | '/new-article'
     | '/rules'
     | '/settings'
+    | '/admin/logs'
+    | '/admin'
     | '/review/$articleId/evaluation'
     | '/review/$articleId/graph'
     | '/review/$articleId/llm-packet'
@@ -214,14 +256,18 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/audit'
     | '/entities'
     | '/golden'
     | '/lexical'
+    | '/login'
     | '/new-article'
     | '/rules'
     | '/settings'
+    | '/admin/logs'
     | '/review/$articleId'
+    | '/admin/'
     | '/review/$articleId/evaluation'
     | '/review/$articleId/graph'
     | '/review/$articleId/llm-packet'
@@ -234,10 +280,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuditRoute: typeof AuditRoute
   EntitiesRoute: typeof EntitiesRoute
   GoldenRoute: typeof GoldenRoute
   LexicalRoute: typeof LexicalRoute
+  LoginRoute: typeof LoginRoute
   NewArticleRoute: typeof NewArticleRoute
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
@@ -265,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/new-article'
       fullPath: '/new-article'
       preLoaderRoute: typeof NewArticleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lexical': {
@@ -295,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -302,12 +364,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/review/$articleId': {
       id: '/review/$articleId'
       path: '/review/$articleId'
       fullPath: '/review/$articleId'
       preLoaderRoute: typeof ReviewArticleIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/logs': {
+      id: '/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/review/$articleId/': {
       id: '/review/$articleId/'
@@ -368,6 +444,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminLogsRoute: typeof AdminLogsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLogsRoute: AdminLogsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface ReviewArticleIdRouteChildren {
   ReviewArticleIdEvaluationRoute: typeof ReviewArticleIdEvaluationRoute
   ReviewArticleIdGraphRoute: typeof ReviewArticleIdGraphRoute
@@ -396,10 +484,12 @@ const ReviewArticleIdRouteWithChildren = ReviewArticleIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuditRoute: AuditRoute,
   EntitiesRoute: EntitiesRoute,
   GoldenRoute: GoldenRoute,
   LexicalRoute: LexicalRoute,
+  LoginRoute: LoginRoute,
   NewArticleRoute: NewArticleRoute,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,

@@ -6,7 +6,7 @@ import type { PhaseRecord } from "@/lib/types";
 import { getApiKey, getState, log, setSuggestions } from "@/lib/store";
 import { callLlmPhase } from "@/lib/llm.functions";
 import { extractJson } from "./json";
-import { createMvpReview, findingsToSuggestions } from "@/lib/api/mvp";
+import { createMvpReview, findingsToSuggestions, type MvpReviewResponse } from "@/lib/api/mvp";
 
 export type RunStatus = "idle" | "running" | "done" | "error";
 
@@ -82,6 +82,7 @@ function payloadFor(phase: string, article: ReturnType<typeof findArticle>) {
 export function usePipeline(articleId: string) {
   const [status, setStatus] = useState<RunStatus>("idle");
   const [phases, setPhases] = useState<PhaseRun[]>(withStatus());
+  const [lastReview, setLastReview] = useState<MvpReviewResponse | null>(null);
   const cancelled = useRef(false);
 
   useEffect(() => () => {
@@ -178,6 +179,7 @@ export function usePipeline(articleId: string) {
     try {
       const review = await createMvpReview(article, liveSettings.baseUrl);
       if (cancelled.current) return "error";
+      setLastReview(review);
       const suggestions = findingsToSuggestions(article, review.findings, review.review_id);
       setSuggestions(articleId, suggestions);
       const t1 = new Date().toISOString();
@@ -262,7 +264,8 @@ export function usePipeline(articleId: string) {
     cancelled.current = true;
     setStatus("idle");
     setPhases(withStatus());
+    setLastReview(null);
   }
 
-  return { status, phases, run, runPhase, reset };
+  return { status, phases, run, runPhase, reset, lastReview };
 }

@@ -1,16 +1,25 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { setMode, useStore, getApiKey } from "@/lib/store";
+import { setMode, useStore } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 import { allArticles } from "@/lib/articles";
+import { getAuthSession } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: () => {
+    if (typeof window !== "undefined" && !getAuthSession()) {
+      throw redirect({ to: "/login" });
+    }
+  },
   head: () => ({
     meta: [
-      { title: "Editorial Proofreading & Style Compliance Lab" },
-      { name: "description", content: "Pick a fixture article and a mode to start the staged editorial review." },
+      { title: "تدقيق تحريري — عرض تجريبي" },
+      {
+        name: "description",
+        content: "الصق مقالاً عربياً واحصل على اقتراحات تحريرية للمراجعة البشرية.",
+      },
     ],
   }),
   component: Index,
@@ -21,20 +30,14 @@ function Index() {
   const customCount = useStore((s) => s.customArticles.length);
   const navigate = useNavigate();
   const articles = allArticles();
-  const hasKey = !!getApiKey();
-
-  function chooseLive() {
-    setMode("live");
-    if (!hasKey) navigate({ to: "/settings", search: { focus: "apiKey" } });
-  }
 
   return (
     <AppShell>
       <section className="space-y-2 mb-8">
-        <h1 className="text-3xl font-bold">مختبر التدقيق التحريري والامتثال للأسلوب — Al Jazeera Arabic</h1>
+        <h1 className="text-3xl font-bold">تدقيق تحريري عربي — عرض تجريبي</h1>
         <p className="text-muted-foreground max-w-3xl">
-          نموذج تفاعلي يُظهر كيف يعمل محرك مرحلي للتدقيق التحريري: تدقيق لغوي، أسلوب آلي، كيانات، شخصيات عامة،
-          معجم منظَّم، رسم بياني للمقال، استرجاع قواعد ومراجع، حزمة سياق للنموذج اللغوي، تحقّق، ثم مراجعة بشرية.
+          الصق مقالاً أو اختر نموذجاً، ثم راجع الاقتراحات: القواعد والكيانات المرتبطة، المرشحات، الحكم،
+          والتحقق، ثم القرار النهائي مع قبول أو رفض أو تعليق.
         </p>
         <p className="text-sm font-semibold text-emerald-700">
           لا يُطبَّق أي اقتراح آلي على النص الأصلي. كل تغيير يحتاج موافقة المحرر.
@@ -44,66 +47,73 @@ function Index() {
       <section className="grid md:grid-cols-2 gap-4 mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>اختر وضع التشغيل</CardTitle>
-            <CardDescription>Demo Mode يستخدم بيانات ثابتة. Live Mode يستدعي نموذجك اللغوي.</CardDescription>
+            <CardTitle>وضع التشغيل</CardTitle>
+            <CardDescription>
+              العرض التجريبي يستخدم بيانات ثابتة. المحرك الحي يستدعي واجهة التدقيق.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex gap-2 flex-wrap">
-              <Button variant={mode === "demo" ? "default" : "outline"} onClick={() => setMode("demo")}>Demo Mode</Button>
-              <Button variant={mode === "live" ? "default" : "outline"} onClick={chooseLive}>Live Experiment Mode</Button>
-              <Link to="/settings" className="self-center text-sm underline text-muted-foreground">إعدادات Live</Link>
+              <Button
+                variant={mode === "demo" ? "default" : "outline"}
+                onClick={() => setMode("demo")}
+              >
+                عرض تجريبي
+              </Button>
+              <Button
+                variant={mode === "live" ? "default" : "outline"}
+                onClick={() => setMode("live")}
+              >
+                محرك حي
+              </Button>
+              <Link to="/settings" className="self-center text-sm underline text-muted-foreground">
+                الإعدادات
+              </Link>
             </div>
             {mode === "live" && (
-              <div className="text-xs flex items-center gap-2">
-                <Badge variant={hasKey ? "default" : "destructive"}>{hasKey ? "API key set" : "Missing API key"}</Badge>
-                {!hasKey && (
-                  <Link to="/settings" search={{ focus: "apiKey" }} className="underline">أضف المفتاح</Link>
-                )}
-              </div>
+              <Badge variant="outline">يستدعي POST /api/v1/reviews</Badge>
             )}
-            <div className="pt-1">
-              <Link to="/new-article"><Button size="sm" variant="secondary">+ مقال جديد لتشغيل المراحل</Button></Link>
-            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>روح القصة</CardTitle>
-            <CardDescription>المرحلية، الاسترجاع المُحكم، والمحرر هو القرار النهائي.</CardDescription>
+            <CardTitle>ابدأ بسرعة</CardTitle>
+            <CardDescription>مقال جديد أو نموذج جاهز</CardDescription>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground space-y-1">
-            <p>1. الكيانات: مَن وماذا. 2. المعجم المنظَّم: أي العبارات تستحق المراجعة.</p>
-            <p>3. القواعد العلائقية: متى تنطبق؟ 4. المرجعيات الذهبية: ماذا قرّر المحررون من قبل؟</p>
+          <CardContent className="flex gap-2 flex-wrap">
+            <Button onClick={() => navigate({ to: "/new-article" })}>مقال جديد</Button>
+            <Button variant="outline" onClick={() => navigate({ to: "/rules" })}>
+              القواعد
+            </Button>
+            <Button variant="outline" onClick={() => navigate({ to: "/entities" })}>
+              الكيانات
+            </Button>
           </CardContent>
         </Card>
       </section>
 
       <section>
         <h2 className="text-xl font-semibold mb-3">
-          المقالات {customCount > 0 && <span className="text-xs text-muted-foreground">(منها {customCount} مخصّص)</span>}
+          المقالات ({articles.length}
+          {customCount ? ` منها ${customCount} مخصصة` : ""})
         </h2>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {articles.map((a) => (
-            <Card key={a.article_id}>
-              <CardHeader>
-                <CardTitle className="text-base leading-7">{a.title}</CardTitle>
-                <CardDescription>
-                  <Badge variant="outline">{a.content_type}</Badge>{" "}
-                  <span className="text-xs">{a.article_id}</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-3">{a.sections[1]?.text ?? a.sections[0].text}</p>
-                <div className="mt-4 flex gap-2">
-                  <Link to="/review/$articleId" params={{ articleId: a.article_id }}>
-                    <Button>ابدأ المراجعة</Button>
-                  </Link>
-                  <Link to="/review/$articleId/phases" params={{ articleId: a.article_id }} search={{ autorun: mode === "live" ? 1 : undefined }}>
-                    <Button variant="outline">{mode === "live" ? "تشغيل Live" : "عرض المراحل"}</Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <Link
+              key={a.article_id}
+              to="/review/$articleId"
+              params={{ articleId: a.article_id }}
+              className="border rounded-md p-4 bg-card hover:border-primary transition-colors block"
+            >
+              <div className="font-semibold" dir="rtl">
+                {a.title}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1 font-mono">{a.article_id}</div>
+              <div className="text-xs mt-2 flex gap-2 flex-wrap">
+                <Badge variant="secondary">{a.content_type}</Badge>
+                <Badge variant="outline">{a.main_entities.length} كيانات</Badge>
+              </div>
+            </Link>
           ))}
         </div>
       </section>

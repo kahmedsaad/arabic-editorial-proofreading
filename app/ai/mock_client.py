@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from typing import Any
 
 from app.models.schemas import (
     Decision,
@@ -10,6 +12,7 @@ from app.models.schemas import (
     Segment,
     Severity,
 )
+from app.rules.bulk import free_text_to_rule_stub, parse_rules_paste
 
 
 @dataclass(frozen=True)
@@ -85,11 +88,43 @@ _EDITORIAL_FIXTURES: tuple[_EditorialFixture, ...] = (
         explanation_ar="تأطير محمل في تعليق الصورة/النص.",
         finding_id="FND-AI-ED-006",
     ),
+    _EditorialFixture(
+        span="النظام الإيراني",
+        category="loaded_framing",
+        decision=Decision.SOFT_WARNING,
+        severity=Severity.MEDIUM,
+        rule_ids=["R_IRAN_REGIME"],
+        suggested_text="السلطات الإيرانية",
+        explanation_ar="صيغة غير مفضلة للإشارة إلى الجهة الحاكمة.",
+        finding_id="FND-AI-ED-007",
+    ),
+    _EditorialFixture(
+        span="نظام الملالي",
+        category="loaded_framing",
+        decision=Decision.BAN,
+        severity=Severity.CRITICAL,
+        rule_ids=["R_IRAN_MULLAHS"],
+        suggested_text="السلطات الإيرانية",
+        explanation_ar="وصف محظور في صوت الناشر.",
+        finding_id="FND-AI-ED-008",
+    ),
 )
 
 
 class MockEditorialAIClient:
     """Deterministic AI client for local tests. No network."""
+
+    def __init__(self) -> None:
+        self.last_call_trace: dict[str, Any] | None = None
+
+    def _trace(self, *, phase: str, system: str, user: str, raw: str) -> None:
+        self.last_call_trace = {
+            "phase": phase,
+            "system_prompt": system,
+            "user_payload": user,
+            "raw_response": raw,
+            "client": "mock",
+        }
 
     async def discover_candidates(
         self,
@@ -100,12 +135,26 @@ class MockEditorialAIClient:
         rules: list[EditorialRule],
         entities: list | None = None,
     ) -> list[Finding]:
-        del mechanical_findings, rules, entities
         findings: list[Finding] = []
+        user = json.dumps(
+            {
+                "document_id": document_id,
+                "segments": [s.model_dump(mode="json") for s in segments],
+                "mechanical_findings": [f.model_dump(mode="json") for f in mechanical_findings],
+                "rules": [r.model_dump(mode="json") for r in rules],
+                "entities": entities or [],
+            },
+            ensure_ascii=False,
+        )
         if not segments:
+            self._trace(
+                phase="discover",
+                system="mock discover",
+                user=user,
+                raw='{"findings":[]}',
+            )
             return findings
 
-        # Editorial Compass fixtures (Hezbollah article and similar text).
         for fixture in _EDITORIAL_FIXTURES:
             for segment in segments:
                 idx = segment.text.find(fixture.span)
@@ -156,7 +205,7 @@ class MockEditorialAIClient:
                 )
             )
 
-        # Intentionally invalid finding so the validator path is exercised.
+        # Intentionally invalid finding so the validator + repair path is exercised.
         findings.append(
             Finding(
                 finding_id="FND-AI-INVALID",
@@ -176,7 +225,113 @@ class MockEditorialAIClient:
                 requires_editor_review=False,
             )
         )
+        self._trace(
+            phase="discover",
+            system="mock discover — fixture span matching",
+            user=user,
+            raw=json.dumps(
+                {"findings": [f.model_dump(mode="json") for f in findings]},
+                ensure_ascii=False,
+            ),
+        )
         return findings
 
-    async def judge_candidates(self, *, candidates: list[Finding]) -> list[Finding]:
-        return candidates
+    async def judge_candidates(
+        self,
+        *,
+        candidates: list[Finding],
+        segments: list[Segment] | None = None,
+        rules: list[EditorialRule] | None = None,
+        entities: list[dict[str, Any]] | None = None,
+    ) -> list[Finding]:
+        judged: list[Finding] = []
+        for finding in candidates:
+            update: dict[str, Any] = {}
+            if finding.decision in {
+                Decision.BAN,
+                Decision.HARD_WARNING,
+                Decision.NEEDS_EDITOR_REVIEW,
+            }:
+                update["requires_editor_review"] = True
+            if finding.confidence < 0.35:
+                update["decision"] = Decision.NEEDS_EDITOR_REVIEW
+                update["requires_editor_review"] = True
+            judged.append(finding.model_copy(update=update) if update else finding)
+        self._trace(
+            phase="judge",
+            system="mock judge — heuristic post-process",
+            user=json.dumps(
+                {
+                    "candidates": [c.model_dump(mode="json") for c in candidates],
+                    "rules": [r.model_dump(mode="json") for r in (rules or [])],
+                    "entities": entities or [],
+                    "segment_ids": [s.segment_id for s in (segments or [])],
+                },
+                ensure_ascii=False,
+            ),
+            raw=json.dumps(
+                {"findings": [f.model_dump(mode="json") for f in judged]},
+                ensure_ascii=False,
+            ),
+        )
+        return judged
+
+    async def repair_findings(
+        self,
+        *,
+        findings: list[Finding],
+        segments: list[Segment],
+        validation_errors: dict[str, list[str]],
+    ) -> list[Finding]:
+        by_id = {s.segment_id: s for s in segments}
+        repaired: list[Finding] = []
+        for finding in findings:
+            errors = validation_errors.get(finding.finding_id, [])
+            if not errors:
+                repaired.append(finding)
+                continue
+            # Drop findings whose span cannot exist in the segment.
+            segment = by_id.get(finding.segment_id)
+            if segment is None or finding.original_text not in segment.text:
+                continue
+            idx = segment.text.find(finding.original_text)
+            repaired.append(
+                finding.model_copy(
+                    update={
+                        "start_offset": idx,
+                        "end_offset": idx + len(finding.original_text),
+                        "validation_errors": [],
+                        "requires_editor_review": True,
+                    }
+                )
+            )
+        self._trace(
+            phase="repair",
+            system="mock repair — realign offsets or drop",
+            user=json.dumps(
+                {
+                    "findings": [f.model_dump(mode="json") for f in findings],
+                    "validation_errors": validation_errors,
+                },
+                ensure_ascii=False,
+            ),
+            raw=json.dumps(
+                {"findings": [f.model_dump(mode="json") for f in repaired]},
+                ensure_ascii=False,
+            ),
+        )
+        return repaired
+
+    async def author_rules(self, *, text: str) -> list[EditorialRule]:
+        pasted = parse_rules_paste(text)
+        result = pasted if pasted else [free_text_to_rule_stub(text)]
+        self._trace(
+            phase="rule_author",
+            system="mock rule author",
+            user=text,
+            raw=json.dumps(
+                {"rules": [r.model_dump(mode="json") for r in result]},
+                ensure_ascii=False,
+            ),
+        )
+        return result

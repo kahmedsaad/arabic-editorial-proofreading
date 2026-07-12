@@ -1,0 +1,19 @@
+{
+  "rule_id": "R_IRAN_REGIME",
+  "version": "1.0",
+  "title_ar": "الإشارة إلى السلطات الإيرانية",
+  "category": "loaded_framing",
+  "rule_type": "relational",
+  "description_ar": "يفضّل استخدام «السلطات الإيرانية» بدل «النظام الإيراني» في صوت الناشر.",
+  "applies_to_zones": ["headline", "body"],
+  "severity": "medium",
+  "keywords": ["النظام الإيراني", "السلطات الإيرانية"],
+  "examples": [
+    {
+      "input": "النظام الإيراني يعلن موقفاً جديداً",
+      "preferred": "السلطات الإيرانية تعلن موقفاً جديداً",
+      "reason": "صيغة مفضلة محايدة نسبياً"
+    }
+  ],
+  "active": true
+}

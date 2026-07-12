@@ -141,7 +141,36 @@ const CLEAN_ARTICLE: Article = {
   ],
 };
 
-export const ARTICLES: Article[] = [HEZBOLLAH_ARTICLE, CLEAN_ARTICLE];
+const IRAN_ARTICLE: Article = {
+  article_id: "aj-iran-framing-demo",
+  title: "النظام الإيراني يعلن موقفاً جديداً من المفاوضات",
+  topic: "Iran contested vocabulary demo",
+  language: "ar",
+  content_type: "news_report",
+  main_entities: ["E_IRAN"],
+  sections: [
+    {
+      section_id: "headline",
+      surface: "headline",
+      label: "العنوان",
+      text: "النظام الإيراني يعلن موقفاً جديداً من المفاوضات",
+    },
+    {
+      section_id: "lead",
+      surface: "lead",
+      label: "المقدمة",
+      text: "قال مراسل الجزيرة إن نظام الملالي فرض قيوداً إضافية على الإعلام المحلي، بينما أكدت السلطات الإيرانية أنها منفتحة على الحوار.",
+    },
+    {
+      section_id: "p2",
+      surface: "paragraph",
+      label: "فقرة 2",
+      text: "ونقلت وسائل إعلام أجنبية عن مصدر غير مسمى تأكيده أن طهران سترد خلال أيام.",
+    },
+  ],
+};
+
+export const ARTICLES: Article[] = [HEZBOLLAH_ARTICLE, CLEAN_ARTICLE, IRAN_ARTICLE];
 
 // ============================================================
 // MOCK PHASE OUTPUTS for the v3 article (Demo Mode)

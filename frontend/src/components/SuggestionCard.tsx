@@ -10,8 +10,9 @@ import {
   rejectSuggestion,
   editSuggestion,
   commentSuggestion,
+  getState,
 } from "@/lib/store";
-import { getRule, getGolden } from "@/data/seed";
+import { sendFeedback } from "@/lib/api/mvp";
 
 const SEVERITY_TONE: Record<string, string> = {
   ban: "destructive",
@@ -24,14 +25,44 @@ const SEVERITY_TONE: Record<string, string> = {
 };
 
 export function SuggestionCard({
-  articleId, s, active, onSelect,
-}: { articleId: string; s: Suggestion; active: boolean; onSelect: () => void }) {
+  articleId,
+  s,
+  active,
+  onSelect,
+  reviewId,
+}: {
+  articleId: string;
+  s: Suggestion;
+  active: boolean;
+  onSelect: () => void;
+  reviewId?: string;
+}) {
   const [editing, setEditing] = useState(false);
   const [edited, setEdited] = useState(s.edited_text ?? s.suggested_text ?? "");
   const [note, setNote] = useState(s.editor_note ?? "");
 
   const tone = (SEVERITY_TONE[s.severity] ?? "secondary") as
-    | "default" | "secondary" | "destructive" | "outline";
+    | "default"
+    | "secondary"
+    | "destructive"
+    | "outline";
+
+  async function feedback(action: "accept" | "reject" | "comment", comment?: string) {
+    if (!reviewId) return;
+    try {
+      await sendFeedback(
+        {
+          review_id: reviewId,
+          finding_id: s.suggestion_id,
+          action,
+          comment,
+        },
+        getState().liveSettings.baseUrl,
+      );
+    } catch {
+      /* offline / demo */
+    }
+  }
 
   return (
     <Card
@@ -42,26 +73,26 @@ export function SuggestionCard({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <CardTitle className="text-sm font-semibold">
-            {s.suggestion_id} · {s.type} · {s.phase}
+            {s.suggestion_id} · {s.type}
           </CardTitle>
           <Badge variant={tone}>{s.severity}</Badge>
         </div>
         <div className="text-xs text-muted-foreground">
-          status: <span className="font-mono">{s.status}</span> · validator:{" "}
+          الحالة: <span className="font-mono">{s.status}</span> · التحقق:{" "}
           <span className="font-mono">{s.validator_status}</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         <div className="grid grid-cols-1 gap-1">
           <div>
-            <span className="text-muted-foreground text-xs">original (locked)</span>
+            <span className="text-muted-foreground text-xs">الأصل (مقفول)</span>
             <div className="rounded bg-muted/60 px-2 py-1 font-arabic" dir="rtl">
               {s.anchor.original_text}
             </div>
           </div>
           {s.suggested_text != null && (
             <div>
-              <span className="text-muted-foreground text-xs">suggested replacement</span>
+              <span className="text-muted-foreground text-xs">البديل المقترح</span>
               {editing ? (
                 <Textarea
                   value={edited}
@@ -70,7 +101,10 @@ export function SuggestionCard({
                   className="font-arabic"
                 />
               ) : (
-                <div className="rounded bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 font-arabic" dir="rtl">
+                <div
+                  className="rounded bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 font-arabic"
+                  dir="rtl"
+                >
                   {s.edited_text ?? s.suggested_text}
                 </div>
               )}
@@ -80,38 +114,16 @@ export function SuggestionCard({
 
         <div className="text-xs text-muted-foreground">{s.reason}</div>
 
-        <div className="text-xs space-y-1">
-          {s.rule_ids.length > 0 && (
-            <div>
-              <span className="font-semibold">rules:</span>{" "}
-              {s.rule_ids.map((id) => (
-                <span key={id} title={getRule(id)?.natural_language ?? id} className="mr-1 font-mono">
-                  {id}
-                </span>
-              ))}
-            </div>
-          )}
-          {s.golden_ids && s.golden_ids.length > 0 && (
-            <div>
-              <span className="font-semibold">precedents:</span>{" "}
-              {s.golden_ids.map((id) => (
-                <span key={id} title={getGolden(id)?.expected_reason ?? id} className="mr-1 font-mono">
-                  {id}
-                </span>
-              ))}
-            </div>
-          )}
-          {s.proof_steps.length > 0 && (
-            <details className="mt-1">
-              <summary className="cursor-pointer text-muted-foreground">proof steps</summary>
-              <ul className="list-disc pr-5 space-y-0.5 mt-1">
-                {s.proof_steps.map((p, i) => (
-                  <li key={i} className="font-mono text-[11px]">{p}</li>
-                ))}
-              </ul>
-            </details>
-          )}
-        </div>
+        {s.rule_ids.length > 0 && (
+          <div className="text-xs">
+            <span className="font-semibold">القواعد: </span>
+            {s.rule_ids.map((id) => (
+              <span key={id} className="mr-1 font-mono">
+                {id}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="space-y-2">
           <Input
@@ -119,7 +131,12 @@ export function SuggestionCard({
             value={note}
             onChange={(e) => setNote(e.target.value)}
             dir="rtl"
-            onBlur={() => note !== (s.editor_note ?? "") && commentSuggestion(articleId, s.suggestion_id, note)}
+            onBlur={() => {
+              if (note !== (s.editor_note ?? "")) {
+                commentSuggestion(articleId, s.suggestion_id, note);
+                void feedback("comment", note);
+              }
+            }}
           />
           <div className="flex gap-2 flex-wrap">
             <Button
@@ -130,19 +147,33 @@ export function SuggestionCard({
                 e.stopPropagation();
                 if (editing) editSuggestion(articleId, s.suggestion_id, edited);
                 acceptSuggestion(articleId, s.suggestion_id);
+                void feedback("accept");
                 setEditing(false);
               }}
-            >قبول</Button>
+            >
+              قبول
+            </Button>
             <Button
               size="sm"
               variant="outline"
-              onClick={(e) => { e.stopPropagation(); setEditing((v) => !v); }}
-            >{editing ? "إلغاء التعديل" : "تعديل"}</Button>
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditing((v) => !v);
+              }}
+            >
+              {editing ? "إلغاء التعديل" : "تعديل"}
+            </Button>
             <Button
               size="sm"
               variant="ghost"
-              onClick={(e) => { e.stopPropagation(); rejectSuggestion(articleId, s.suggestion_id); }}
-            >رفض</Button>
+              onClick={(e) => {
+                e.stopPropagation();
+                rejectSuggestion(articleId, s.suggestion_id);
+                void feedback("reject");
+              }}
+            >
+              رفض
+            </Button>
           </div>
           <p className="text-[11px] text-muted-foreground">
             لا يُطبَّق على النص الأصلي. القبول يضيف التغيير إلى المعاينة المنقَّحة فقط.

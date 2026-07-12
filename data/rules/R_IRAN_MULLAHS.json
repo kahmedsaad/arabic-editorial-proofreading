@@ -1,0 +1,19 @@
+{
+  "rule_id": "R_IRAN_MULLAHS",
+  "version": "1.0",
+  "title_ar": "حظر وصف نظام الملالي",
+  "category": "loaded_framing",
+  "rule_type": "relational",
+  "description_ar": "لا يُستخدم وصف «نظام الملالي» في صوت الجزيرة؛ يُستبدل بالصيغة المعتمدة.",
+  "applies_to_zones": ["headline", "body", "caption"],
+  "severity": "critical",
+  "keywords": ["نظام الملالي", "الملالي"],
+  "examples": [
+    {
+      "input": "نظام الملالي يفرض قيوداً جديدة",
+      "preferred": "السلطات الإيرانية تفرض قيوداً جديدة",
+      "reason": "وصف محظور"
+    }
+  ],
+  "active": true
+}

@@ -1,0 +1,23 @@
+{
+  "entity_id": "E_IRAN",
+  "canonical_ar": "إيران",
+  "aliases": [
+    "السلطات الإيرانية",
+    "طهران"
+  ],
+  "category": "country",
+  "active": true,
+  "current_title": null,
+  "policy_profiles": [
+    "sensitive_state_actor"
+  ],
+  "preferred_descriptors": [
+    "السلطات الإيرانية"
+  ],
+  "discouraged_descriptors": [
+    "النظام الإيراني",
+    "نظام الملالي"
+  ],
+  "version": "1.1",
+  "last_verified": null
+}

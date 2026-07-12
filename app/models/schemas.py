@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class Zone(StrEnum):
@@ -87,10 +87,26 @@ class Entity(BaseModel):
     model_config = {"extra": "ignore"}
 
     entity_id: str
-    canonical_ar: str
+    canonical_ar: str = ""
     aliases: list[str] = Field(default_factory=list)
     category: str = "general"
     active: bool = True
+    current_title: str | None = None
+    policy_profiles: list[str] = Field(default_factory=list)
+    preferred_descriptors: list[str] = Field(default_factory=list)
+    discouraged_descriptors: list[str] = Field(default_factory=list)
+    version: str = "1.0"
+    last_verified: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def accept_approved_ar(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if not data.get("canonical_ar") and data.get("approved_ar"):
+                data = {**data, "canonical_ar": data["approved_ar"]}
+            if data.get("type") and not data.get("category"):
+                data = {**data, "category": data["type"]}
+        return data
 
 
 class Finding(BaseModel):
@@ -112,6 +128,30 @@ class Finding(BaseModel):
     requires_editor_review: bool = False
     validation_status: ValidationStatus = ValidationStatus.PENDING
     validation_errors: list[str] = Field(default_factory=list)
+
+
+class ReviewStage(BaseModel):
+    """Public-safe progressive stage (no prompts / internals)."""
+
+    stage_id: str
+    label_ar: str
+    status: str = "complete"
+    summary: dict[str, Any] = Field(default_factory=dict)
+
+
+class PipelineLogStep(BaseModel):
+    """Admin-only detailed step log (prompts, payloads, raw LLM)."""
+
+    step_id: str
+    label: str
+    kind: str = "internal"  # mechanical | retrieve | llm | gate | validate | final
+    system_prompt: str | None = None
+    user_payload: str | None = None
+    raw_response: str | None = None
+    context: dict[str, Any] = Field(default_factory=dict)
+    output_summary: dict[str, Any] = Field(default_factory=dict)
+    started_at: str = ""
+    finished_at: str = ""
 
 
 class ReviewRequest(BaseModel):
@@ -146,6 +186,12 @@ class ReviewResponse(BaseModel):
     rejected_findings: list[Finding] = Field(default_factory=list)
     mechanical_finding_count: int = 0
     ai_finding_count: int = 0
+    stages: list[ReviewStage] = Field(default_factory=list)
+    retrieved_rules: list[EditorialRule] = Field(default_factory=list)
+    retrieved_entities: list[Entity] = Field(default_factory=list)
+    candidate_findings: list[Finding] = Field(default_factory=list)
+    # Admin-only; stripped from public GET /reviews/{id}
+    pipeline_log: list[PipelineLogStep] = Field(default_factory=list)
 
 
 class EvaluationRunRequest(BaseModel):
@@ -155,3 +201,59 @@ class EvaluationRunRequest(BaseModel):
 class EvaluationRunResponse(BaseModel):
     run_id: str
     metrics: dict[str, Any]
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    token: str
+    role: str
+    username: str
+
+
+class PasswordUpdateRequest(BaseModel):
+    password: str = Field(min_length=4)
+
+
+class SystemPromptRecord(BaseModel):
+    phase: str
+    body: str
+    version: int = 1
+    updated_at: str = ""
+
+
+class SystemPromptUpdate(BaseModel):
+    body: str
+
+
+class BulkPasteRequest(BaseModel):
+    text: str
+    delimiter: str | None = None  # auto: tab or comma
+
+
+class RuleAuthorRequest(BaseModel):
+    text: str
+    confirm: bool = False
+
+
+class RuleAuthorResponse(BaseModel):
+    preview: list[EditorialRule]
+    saved: list[EditorialRule] = Field(default_factory=list)
+
+
+class FeedbackRequest(BaseModel):
+    review_id: str
+    finding_id: str
+    action: str  # accept | reject | comment
+    comment: str | None = None
+
+    @field_validator("action")
+    @classmethod
+    def valid_action(cls, value: str) -> str:
+        allowed = {"accept", "reject", "comment"}
+        if value not in allowed:
+            raise ValueError(f"action must be one of {allowed}")
+        return value
