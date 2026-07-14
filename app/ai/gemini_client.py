@@ -9,6 +9,7 @@ from typing import Any
 from app.ai.fewshot import MUST_CHECK_RULES, load_golden_fewshots
 from app.config import ROOT_DIR, settings
 from app.models.schemas import (
+    ArticleContext,
     Decision,
     EditorialRule,
     Finding,
@@ -71,6 +72,7 @@ class GeminiEditorialAIClient:
         mechanical_findings: list[Finding],
         rules: list[EditorialRule],
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> str:
         schema_hint = {
             "findings": [
@@ -91,11 +93,20 @@ class GeminiEditorialAIClient:
                     "explanation_ar": "...",
                     "confidence": 0.5,
                     "requires_editor_review": True,
+                    "editorial_harm_if_ignored": "low",
+                    "rule_applicability": "uncertain",
+                    "article_context_resolves_issue": False,
+                    "would_interrupt_editor": False,
+                    "quotation_status": "not_quote",
+                    "publisher_voice": True,
                 }
             ]
         }
         payload = {
             "document_id": document_id,
+            "article_context": (
+                article_context.model_dump(mode="json") if article_context else None
+            ),
             "segments": [s.model_dump() for s in segments],
             "mechanical_findings": [f.model_dump() for f in mechanical_findings],
             "rules": [r.model_dump() for r in rules],
@@ -104,10 +115,11 @@ class GeminiEditorialAIClient:
             "golden_examples": self._fewshots,
             "output_schema": schema_hint,
             "instructions": (
-                "Return JSON only with key findings. Prefer an empty findings list over "
-                "speculative warnings. Do not rewrite the full article. "
-                "Focus on loaded accusations, conflicts, relational framing, attribution "
-                "issues, and triggers that keyword matching will miss. "
+                "Discovery only: return candidate findings with category, exact span, "
+                "segment_id, concern, rule_ids. Prefer empty list over speculative "
+                "warnings. Do not rewrite the full article. "
+                "Use article_context for quotes/speakers/attribution. "
+                "Stay silent on headline compression when body attributes. "
                 "Offsets are segment-local and must match original_text exactly. "
                 "decision must be one of: acceptable, suggest, replace, soft_warning, "
                 "hard_warning, ban, needs_editor_review."
@@ -278,6 +290,7 @@ class GeminiEditorialAIClient:
         mechanical_findings: list[Finding],
         rules: list[EditorialRule],
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]:
         started = time.perf_counter()
         try:
@@ -295,6 +308,7 @@ class GeminiEditorialAIClient:
             mechanical_findings=mechanical_findings,
             rules=rules,
             entities=entities,
+            article_context=article_context,
         )
         try:
             raw_text = self._generate(system=self._system_prompt(), user=prompt)
@@ -341,6 +355,7 @@ class GeminiEditorialAIClient:
         segments: list[Segment] | None = None,
         rules: list[EditorialRule] | None = None,
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]:
         if not candidates:
             return []
@@ -373,12 +388,17 @@ class GeminiEditorialAIClient:
         user = json.dumps(
             {
                 "candidates": [c.model_dump(mode="json") for c in candidates],
+                "article_context": (
+                    article_context.model_dump(mode="json") if article_context else None
+                ),
                 "segments": [s.model_dump(mode="json") for s in (segments or [])],
                 "rules": [r.model_dump(mode="json") for r in (rules or [])],
                 "entities": entities or [],
                 "instructions": (
-                    "Judge each candidate. Confirm, refine, or drop. "
-                    "Keep exact original_text and offsets. Return {\"findings\":[...]}."
+                    "Precision adjudication: keep only candidates that deserve to "
+                    "interrupt an editor. Suppress headline attribution when body "
+                    "attributes; never rewrite quotes; set silence fields. "
+                    "Return {\"findings\":[...]}."
                 ),
             },
             ensure_ascii=False,

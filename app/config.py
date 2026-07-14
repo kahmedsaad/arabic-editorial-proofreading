@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     fuzzy_taa_marbuta: bool = False
     # Alef-variant soft warnings are noisy for POC demos; off by default.
     enable_letter_variant_warnings: bool = False
+    # Punctuation policy: off | strict | full (default strict — suppress style noise)
+    punctuation_policy: str = "strict"
 
     # Demo auth — read from .env on every startup (change ADMIN_PASSWORD there)
     public_password: str = "demo"
@@ -42,6 +44,20 @@ class Settings(BaseSettings):
     gcp_location: str = "us-central1"
     google_application_credentials: str | None = None
     storage_bucket: str | None = None
+
+    # Cloud Run / demo hosting — comma-separated origins (* allowed for open demo)
+    cors_origins: str = (
+        "http://127.0.0.1:5173,http://localhost:5173,"
+        "http://127.0.0.1:3000,http://localhost:3000"
+    )
+
+    # Dataset storage (local vs GCS) — local works without GCP credentials
+    data_backend: str = "local"  # local | gcs
+    local_data_dir: Path = ROOT_DIR / "data" / "local"
+    gcs_data_bucket: str = "arabic-proofreading-data-ooredoo-499510"
+    gcs_data_prefix: str = ""
+    data_cache_dir: Path = ROOT_DIR / "data" / "cache"
+    data_cache_enabled: bool = True
 
 
 settings = Settings()

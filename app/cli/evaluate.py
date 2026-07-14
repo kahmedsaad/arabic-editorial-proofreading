@@ -23,11 +23,13 @@ async def _review_record(orchestrator: ReviewOrchestrator, record):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Evaluate proofreading engine on golden JSONL")
+    parser = argparse.ArgumentParser(
+        description="Evaluate proofreading engine on golden JSONL (local path or gs://)"
+    )
     parser.add_argument(
         "--dataset",
-        type=Path,
-        default=ROOT_DIR / "data" / "evaluation" / "golden.jsonl",
+        default=str(ROOT_DIR / "data" / "evaluation" / "golden.jsonl"),
+        help="Local path or gs://bucket/object JSONL",
     )
     parser.add_argument(
         "--output",

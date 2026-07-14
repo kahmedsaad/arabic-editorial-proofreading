@@ -1,0 +1,42 @@
+{
+  "description": "Schema examples for POC datasets. External corpora ≠ Al Jazeera policy.",
+  "clean_article": {
+    "record_id": "A001",
+    "language": "ar",
+    "source_type": "external_public",
+    "headline": "...",
+    "body": "...",
+    "expected_findings": [],
+    "reason": "acceptable_published_copy",
+    "notes": "Not Al Jazeera house-style data"
+  },
+  "synthetic_issue": {
+    "record_id": "S001",
+    "source_type": "synthetic_mutation",
+    "original_text": "...",
+    "mutated_text": "...",
+    "issue_span": "...",
+    "issue_category": "numeric_contradiction",
+    "expected_action": "show"
+  },
+  "editor_feedback": {
+    "record_id": "F001",
+    "source_type": "editor_feedback",
+    "article_id": "A001",
+    "finding_id": "F004",
+    "decision": "drop",
+    "drop_reason": "context_resolves_issue"
+  },
+  "drop_reasons": [
+    "context_resolves_issue",
+    "headline_compression",
+    "valid_attributed_quotation",
+    "optional_style_preference",
+    "incorrect_rule",
+    "duplicate_warning",
+    "incorrect_span",
+    "fact_checking_outside_scope",
+    "acceptable_arabic_variation",
+    "too_low_impact"
+  ]
+}

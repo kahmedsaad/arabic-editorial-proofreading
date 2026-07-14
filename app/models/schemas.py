@@ -43,6 +43,78 @@ class ValidationStatus(StrEnum):
     INVALID = "invalid"
 
 
+class ArticleType(StrEnum):
+    BREAKING_NEWS = "breaking_news"
+    ANALYSIS = "analysis"
+    OPINION = "opinion"
+    LIVE_UPDATE = "live_update"
+    EXPLAINER = "explainer"
+    NEWS_REPORT = "news_report"
+    UNKNOWN = "unknown"
+
+
+class QuotationStatus(StrEnum):
+    NOT_QUOTE = "not_quote"
+    DIRECT_QUOTE = "direct_quote"
+    PARTIAL_QUOTE = "partial_quote"
+    INDIRECT_SPEECH = "indirect_speech"
+    UNCERTAIN = "uncertain"
+
+
+class AdjudicationVerdict(StrEnum):
+    SHOW = "SHOW"
+    SUPPRESS = "SUPPRESS"
+    NEEDS_CONTEXT = "NEEDS_CONTEXT"
+    DUPLICATE = "DUPLICATE"
+    MECHANICAL_ONLY = "MECHANICAL_ONLY"
+
+
+class EditorialHarm(StrEnum):
+    NONE = "none"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+class RuleApplicability(StrEnum):
+    CLEAR = "clear"
+    UNCERTAIN = "uncertain"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class QuotationSpan(BaseModel):
+    segment_id: str
+    start_offset: int
+    end_offset: int
+    text: str
+    status: QuotationStatus = QuotationStatus.DIRECT_QUOTE
+
+
+class AttributionLink(BaseModel):
+    claim_span: str = ""
+    speaker: str | None = None
+    attribution_verb: str | None = None
+    source_org: str | None = None
+    segment_id: str = ""
+
+
+class ArticleContext(BaseModel):
+    """Lightweight Pass-A context shared by discovery and adjudication."""
+
+    article_type: ArticleType = ArticleType.UNKNOWN
+    headline_segment_ids: list[str] = Field(default_factory=list)
+    body_segment_ids: list[str] = Field(default_factory=list)
+    quotation_spans: list[QuotationSpan] = Field(default_factory=list)
+    speakers: list[str] = Field(default_factory=list)
+    entity_ids: list[str] = Field(default_factory=list)
+    dates: list[str] = Field(default_factory=list)
+    numbers: list[str] = Field(default_factory=list)
+    locations: list[str] = Field(default_factory=list)
+    central_claim: str = ""
+    terminology_used: list[str] = Field(default_factory=list)
+    attribution_links: list[AttributionLink] = Field(default_factory=list)
+
+
 class Document(BaseModel):
     document_id: str
     language: str = "ar"
@@ -128,6 +200,16 @@ class Finding(BaseModel):
     requires_editor_review: bool = False
     validation_status: ValidationStatus = ValidationStatus.PENDING
     validation_errors: list[str] = Field(default_factory=list)
+    # Sprint 1 precision / adjudication (optional; filled by judge + adjudicator)
+    adjudication_verdict: AdjudicationVerdict | None = None
+    editorial_harm_if_ignored: EditorialHarm | None = None
+    rule_applicability: RuleApplicability | None = None
+    article_context_resolves_issue: bool | None = None
+    would_interrupt_editor: bool | None = None
+    quotation_status: QuotationStatus | None = None
+    publisher_voice: bool | None = None
+    # Run4 punctuation precision — objective subtype for gate/policy
+    punctuation_subtype: str | None = None
 
 
 class ReviewStage(BaseModel):
@@ -190,6 +272,7 @@ class ReviewResponse(BaseModel):
     retrieved_rules: list[EditorialRule] = Field(default_factory=list)
     retrieved_entities: list[Entity] = Field(default_factory=list)
     candidate_findings: list[Finding] = Field(default_factory=list)
+    article_context: ArticleContext | None = None
     # Admin-only; stripped from public GET /reviews/{id}
     pipeline_log: list[PipelineLogStep] = Field(default_factory=list)
 

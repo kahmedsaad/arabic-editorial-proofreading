@@ -27,3 +27,26 @@ benchmark_v2/private/manifest.json
 benchmark_v2/results/*
 !benchmark_v2/results/.gitkeep
 _tmp_benchmark_v2/
+
+# Local / private / cached datasets (not GitHub)
+data/local/
+data/downloads/
+data/cache/
+data/private/
+data/editor_feedback/
+data/before_after/
+
+# Evaluation secrets and private gold
+benchmark_v2/private/
+benchmark_v2/**/private_gold*
+**/*private_gold*
+**/*hidden_gold*
+
+# Large frozen eval dumps (keep docs + templates tracked)
+data/evaluation/runs/
+
+# Downloaded / compressed dataset archives
+*.jsonl.gz
+*.parquet
+*.arrow
+*.csv.gz

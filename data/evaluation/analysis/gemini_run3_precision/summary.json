@@ -1,0 +1,119 @@
+{
+  "source_run": "C:\\Users\\khhab\\Downloads\\ai-proofreading\\data\\evaluation\\runs\\gemini_run3",
+  "immutable": true,
+  "frozen_report_echo": {
+    "clean_article_fp_rate": 0.77,
+    "total_findings": 595,
+    "fp_by_category": {
+      "punctuation": 432,
+      "attribution": 35,
+      "clarity": 34,
+      "headline_body_mismatch": 20,
+      "entity_name": 15,
+      "loaded_framing": 14,
+      "numeric_contradiction": 14,
+      "spelling": 13,
+      "attribution_strength": 5,
+      "unsupported_certainty": 3,
+      "publisher_voice": 3,
+      "repetition": 3,
+      "entity_confusion": 2,
+      "consistency": 1,
+      "grammar": 1
+    }
+  },
+  "derived_split_metrics": {
+    "n_articles": 300,
+    "articles_with_fp": 231,
+    "clean_article_fp_rate": 0.77,
+    "total_findings": 595,
+    "findings_per_article": 1.9833,
+    "fp_by_category": {
+      "punctuation": 432,
+      "attribution": 35,
+      "clarity": 34,
+      "headline_body_mismatch": 20,
+      "entity_name": 15,
+      "loaded_framing": 14,
+      "numeric_contradiction": 14,
+      "spelling": 13,
+      "attribution_strength": 5,
+      "unsupported_certainty": 3,
+      "publisher_voice": 3,
+      "repetition": 3,
+      "entity_confusion": 2,
+      "consistency": 1,
+      "grammar": 1
+    },
+    "clean_fp_rate_all": 0.77,
+    "clean_fp_rate_editorial_only": 0.3467,
+    "clean_fp_rate_punctuation_only": 0.6633,
+    "findings_per_article_all": 1.9833,
+    "findings_per_article_editorial_only": 0.5433,
+    "findings_per_article_punctuation_only": 1.44,
+    "zero_finding_clean_article_rate": 0.23,
+    "zero_editorial_finding_clean_article_rate": 0.6533,
+    "category_report": {
+      "punctuation": {
+        "count": 432,
+        "rate_per_article": 1.44
+      },
+      "attribution": {
+        "count": 40,
+        "rate_per_article": 0.1333
+      },
+      "clarity": {
+        "count": 34,
+        "rate_per_article": 0.1133
+      },
+      "headline_mismatch": {
+        "count": 23,
+        "rate_per_article": 0.0767
+      },
+      "quote_voice": {
+        "count": 0,
+        "rate_per_article": 0.0
+      },
+      "loaded_framing": {
+        "count": 14,
+        "rate_per_article": 0.0467
+      },
+      "entity_consistency": {
+        "count": 17,
+        "rate_per_article": 0.0567
+      },
+      "numeric_consistency": {
+        "count": 14,
+        "rate_per_article": 0.0467
+      },
+      "temporal_consistency": {
+        "count": 0,
+        "rate_per_article": 0.0
+      }
+    },
+    "total_findings_editorial": 163,
+    "total_findings_punctuation": 432
+  },
+  "punctuation_count": 432,
+  "non_punctuation_count": 163,
+  "punctuation_sample_size": 100,
+  "punctuation_subtype_counts": {
+    "malformed_spacing": 380,
+    "repeated_punctuation": 33,
+    "unbalanced_quotes": 19
+  },
+  "run4_intermediate_targets": {
+    "clean_fp_rate_all": "<=25%",
+    "clean_fp_rate_editorial_only": "<=15%",
+    "punctuation_findings_strict": "<=30",
+    "findings_per_clean_article": "<=0.3",
+    "zero_finding_clean_articles": ">=75%"
+  },
+  "poc_final_targets": {
+    "clean_fp_rate": "<=10%",
+    "editorial_precision": ">=55%",
+    "quote_preservation_safety": ">=98%",
+    "invalid_span_rate": "0%"
+  },
+  "root_cause": "Dominant FPs are deterministic mechanical punctuation spacing checks (MECH-PUNCT-AFTER / MECH-PUNCT-SPACE / MECH-WS), not Gemini quality."
+}

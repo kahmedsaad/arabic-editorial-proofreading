@@ -17,10 +17,27 @@ type State = {
 
 const STORAGE_KEY = "aj-editor-lab/v1";
 
+function envApiBaseUrl(): string | undefined {
+  if (typeof import.meta === "undefined") return undefined;
+  const v = (import.meta as ImportMeta & { env?: Record<string, string> }).env
+    ?.VITE_API_BASE_URL;
+  return v ? v.replace(/\/$/, "") : undefined;
+}
+
+function resolveLiveBaseUrl(stored?: string): string {
+  const fromEnv = envApiBaseUrl();
+  const local =
+    !stored ||
+    stored.includes("127.0.0.1") ||
+    stored.includes("localhost");
+  if (fromEnv && local) return fromEnv;
+  return (stored || fromEnv || "http://127.0.0.1:8001").replace(/\/$/, "");
+}
+
 const initialState: State = {
   mode: "live",
   liveSettings: {
-    baseUrl: "http://127.0.0.1:8001",
+    baseUrl: resolveLiveBaseUrl(),
     apiKey: "",
     model: "mvp-engine",
     useMvpEngine: true,
@@ -47,6 +64,7 @@ function load(): State {
       liveSettings: {
         ...initialState.liveSettings,
         ...(parsed.liveSettings ?? {}),
+        baseUrl: resolveLiveBaseUrl(parsed.liveSettings?.baseUrl),
         apiKey: "",
         useMvpEngine: parsed.liveSettings?.useMvpEngine ?? true,
       },

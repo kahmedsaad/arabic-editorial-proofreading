@@ -1,6 +1,6 @@
 from typing import Any, Protocol
 
-from app.models.schemas import EditorialRule, Finding, Segment
+from app.models.schemas import ArticleContext, EditorialRule, Finding, Segment
 
 
 class EditorialAIClient(Protocol):
@@ -12,6 +12,7 @@ class EditorialAIClient(Protocol):
         mechanical_findings: list[Finding],
         rules: list[EditorialRule],
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]: ...
 
     async def judge_candidates(
@@ -21,6 +22,7 @@ class EditorialAIClient(Protocol):
         segments: list[Segment] | None = None,
         rules: list[EditorialRule] | None = None,
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]: ...
 
     async def repair_findings(

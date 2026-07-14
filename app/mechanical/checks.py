@@ -35,6 +35,7 @@ def _finding(
     rule_ids: list[str],
     severity: Severity = Severity.MEDIUM,
     decision: Decision = Decision.REPLACE,
+    punctuation_subtype: str | None = None,
 ) -> Finding:
     return Finding(
         finding_id=finding_id,
@@ -52,6 +53,7 @@ def _finding(
         explanation_ar=explanation_ar,
         confidence=1.0,
         requires_editor_review=severity in {Severity.HIGH, Severity.CRITICAL},
+        punctuation_subtype=punctuation_subtype,
     )
 
 
@@ -101,6 +103,7 @@ def check_repeated_whitespace(segment: Segment, counter: list[int]) -> list[Find
                 rule_ids=["MECH-WS"],
                 severity=Severity.LOW,
                 decision=Decision.SUGGEST,
+                punctuation_subtype="malformed_spacing",
             )
         )
     return findings
@@ -124,6 +127,7 @@ def check_spacing_before_punctuation(segment: Segment, counter: list[int]) -> li
                 rule_ids=["MECH-PUNCT-SPACE"],
                 severity=Severity.LOW,
                 decision=Decision.REPLACE,
+                punctuation_subtype="malformed_spacing",
             )
         )
     return findings
@@ -146,6 +150,7 @@ def check_repeated_punctuation(segment: Segment, counter: list[int]) -> list[Fin
                 rule_ids=["MECH-PUNCT-DUP"],
                 severity=Severity.LOW,
                 decision=Decision.REPLACE,
+                punctuation_subtype="repeated_punctuation",
             )
         )
     return findings
@@ -204,6 +209,7 @@ def check_missing_space_after_punctuation(segment: Segment, counter: list[int]) 
                 rule_ids=["MECH-PUNCT-AFTER"],
                 severity=Severity.LOW,
                 decision=Decision.SUGGEST,
+                punctuation_subtype="malformed_spacing",
             )
         )
     return findings
@@ -298,8 +304,87 @@ def check_quotation_consistency(segment: Segment, counter: list[int]) -> list[Fi
             rule_ids=["MECH-QUOTE"],
             severity=Severity.LOW,
             decision=Decision.SOFT_WARNING,
+            punctuation_subtype="unbalanced_quotes",
         )
     ]
+
+
+def check_unbalanced_delimiters(
+    segment: Segment,
+    counter: list[int],
+    *,
+    pairs: tuple[tuple[str, str], ...],
+    rule_id: str,
+    subtype: str,
+    label_ar: str,
+) -> list[Finding]:
+    """Generic stack check for parentheses / brackets / braces."""
+    openers = {a: b for a, b in pairs}
+    closers = {b: a for a, b in pairs}
+    stack: list[tuple[str, int]] = []
+    problem_idx: int | None = None
+    problem_ch: str | None = None
+    reason = ""
+
+    for i, ch in enumerate(segment.text):
+        if ch in openers:
+            stack.append((ch, i))
+            continue
+        if ch in closers:
+            if not stack:
+                problem_idx, problem_ch, reason = i, ch, f"إغلاق {label_ar} دون فتح مطابق."
+                break
+            opener, _ = stack.pop()
+            if openers.get(opener) != ch:
+                problem_idx, problem_ch, reason = i, ch, f"عدم تطابق زوج {label_ar}."
+                break
+
+    if problem_idx is None and stack:
+        opener, idx = stack[-1]
+        problem_idx, problem_ch, reason = idx, opener, f"فتح {label_ar} دون إغلاق مطابق."
+
+    if problem_idx is None or problem_ch is None:
+        return []
+
+    counter[0] += 1
+    return [
+        _finding(
+            finding_id=f"FND-M-{counter[0]:04d}",
+            segment=segment,
+            category="punctuation",
+            original_text=problem_ch,
+            start=problem_idx,
+            end=problem_idx + 1,
+            explanation_ar=reason,
+            suggested_text=None,
+            rule_ids=[rule_id],
+            severity=Severity.LOW,
+            decision=Decision.SOFT_WARNING,
+            punctuation_subtype=subtype,
+        )
+    ]
+
+
+def check_unbalanced_parentheses(segment: Segment, counter: list[int]) -> list[Finding]:
+    return check_unbalanced_delimiters(
+        segment,
+        counter,
+        pairs=(("(", ")"), ("（", "）")),
+        rule_id="MECH-PAREN",
+        subtype="unbalanced_parentheses",
+        label_ar="أقواس",
+    )
+
+
+def check_unbalanced_brackets(segment: Segment, counter: list[int]) -> list[Finding]:
+    return check_unbalanced_delimiters(
+        segment,
+        counter,
+        pairs=(("[", "]"), ("{", "}"), ("【", "】")),
+        rule_id="MECH-BRACK",
+        subtype="unbalanced_brackets",
+        label_ar="أقواس مربعة/معقوفة",
+    )
 
 
 def check_digit_script_consistency(segment: Segment, counter: list[int]) -> list[Finding]:
@@ -448,6 +533,8 @@ def run_mechanical_checks(
         if enable_letter_variant_warnings:
             findings.extend(check_common_letter_variants(segment, counter))
         findings.extend(check_quotation_consistency(segment, counter))
+        findings.extend(check_unbalanced_parentheses(segment, counter))
+        findings.extend(check_unbalanced_brackets(segment, counter))
         findings.extend(check_digit_script_consistency(segment, counter))
         findings.extend(check_malformed_segment(segment, counter))
         findings.extend(check_entity_spellings(segment, counter, aliases))

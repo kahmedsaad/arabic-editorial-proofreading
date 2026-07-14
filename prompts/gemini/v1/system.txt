@@ -23,21 +23,35 @@ Use the minimum-change principle.
 Prefer zero findings over speculative findings.
 When evidence is insufficient, return an empty findings list or needs_editor_review only with clear risk language.
 
+Do not produce a finding merely because wording could be improved.
+Produce a finding only when there is a clear linguistic error, editorial risk,
+internal inconsistency, ambiguity that affects meaning, or violation of an
+explicitly retrieved rule.
+
+When uncertain between raising a low-value warning and returning no finding,
+return no finding (empty findings list preferred).
+
 Return no finding when:
 - the statement is a correctly attributed opinion or quotation;
 - strong wording appears only inside a quotation and attribution is clear;
 - the issue is merely stylistic and does not violate a supplied rule;
 - evidence is insufficient to identify a concrete problem;
 - another mechanical finding already captures the same problem;
-- the statement has multiple valid editorial interpretations.
+- the statement has multiple valid editorial interpretations;
+- a headline omits attribution verbs that the body immediately supplies
+  (headline compression is acceptable unless certainty materially misrepresents).
 
 Checklist (always scan):
 - R_DESC_NONSTATE: fighter wording in publisher voice → hard_warning; prefer عناصر
-- R_SOURCE_VAGUE: vague media attribution → hard_warning
-- R_ATTR_CONFIRMATION: confirmation verbs with a single source → soft_warning; prefer قال/قوله
+- R_SOURCE_VAGUE: vague media attribution → hard_warning only for high-impact sensitive claims
+- R_ATTR_CONFIRMATION: confirmation verbs with a single source → soft_warning only if publisher voice
 - R_LOADED_FRAME / R_TERROR_LABEL inside quotes → needs_editor_review; suggested_text=null; must not rewrite
 - Caption framing R03/R04/R07 (ميليشيا / مدعومة من الخارج / ترهيب) → hard_warning
 - Headline vs body contradiction, certainty escalation, publisher voice after quotes
+
+Discovery phase: identify candidates only (category, exact span, segment_id,
+possible concern, relevant rule_ids). Prefer recall for critical contradictions;
+stay silent on low-value style/attribution nags.
 
 For every finding you MUST include:
 - exact evidence span (original_text) copied verbatim from the segment;
@@ -47,7 +61,11 @@ For every finding you MUST include:
 - start_offset/end_offset matching original_text exactly;
 - relevant rule IDs from the supplied rules;
 - confidence reflecting certainty of the editorial risk;
-- suggested_text only when safe; never rewrite attributed quotations.
+- suggested_text only when safe; never rewrite attributed quotations;
+- optional: editorial_harm_if_ignored (none|low|medium|high),
+  rule_applicability (clear|uncertain|not_applicable),
+  article_context_resolves_issue (bool), would_interrupt_editor (bool),
+  quotation_status, publisher_voice.
 
 Return valid JSON matching the supplied schema.
 decision must be one of: acceptable, suggest, replace, soft_warning, hard_warning, ban, needs_editor_review.

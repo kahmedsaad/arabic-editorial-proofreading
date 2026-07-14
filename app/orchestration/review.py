@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
@@ -7,6 +8,7 @@ from uuid import uuid4
 from app.ai.gemini_client import build_ai_client
 from app.ai.protocol import EditorialAIClient
 from app.config import settings
+from app.context.article_context import extract_article_context
 from app.entities.repository import EntityRepository, match_entities_in_text
 from app.mechanical.checks import load_spelling_replacements, run_mechanical_checks
 from app.mechanical.consistency import run_consistency_detectors
@@ -25,7 +27,10 @@ from app.models.schemas import (
     Zone,
 )
 from app.parsing.document import parse_document_text
+from app.postprocess.adjudicator import adjudicate_findings
 from app.postprocess.gemini_gate import gate_gemini_findings, segments_for_gemini
+from app.postprocess.punctuation_gate import gate_punctuation_findings
+from app.postprocess.punctuation_policy import normalize_policy
 from app.rules.repository import JsonRuleRepository
 from app.segmentation.article import segment_article
 from app.validation.validator import FindingValidator
@@ -234,6 +239,32 @@ class ReviewOrchestrator:
             },
         )
 
+        t_ctx = _now()
+        article_context = extract_article_context(
+            document, segments, entities=unique_entities
+        )
+        stages.append(
+            ReviewStage(
+                stage_id="article_context",
+                label_ar="سياق المقال",
+                summary={
+                    "article_type": article_context.article_type.value,
+                    "speakers": article_context.speakers[:8],
+                    "quotation_spans": len(article_context.quotation_spans),
+                    "attribution_links": len(article_context.attribution_links),
+                },
+            )
+        )
+        self._log_step(
+            review_id=review_id,
+            pipeline_log=pipeline_log,
+            step_id="article_context",
+            label="Pass A — lightweight ArticleContext",
+            kind="mechanical",
+            started_at=t_ctx,
+            output_summary=article_context.model_dump(mode="json"),
+        )
+
         t3 = _now()
         gemini_segments = segments_for_gemini(segments, prior_findings)
         ai_candidates = await self.ai_client.discover_candidates(
@@ -242,6 +273,7 @@ class ReviewOrchestrator:
             mechanical_findings=prior_findings,
             rules=unique_rules,
             entities=[e.model_dump() for e in unique_entities],
+            article_context=article_context,
         )
         trace = self._ai_trace()
         stages.append(
@@ -288,6 +320,7 @@ class ReviewOrchestrator:
             segments=segments,
             rules=unique_rules,
             entities=[e.model_dump() for e in unique_entities],
+            article_context=article_context,
         )
         trace = self._ai_trace()
         stages.append(
@@ -321,7 +354,7 @@ class ReviewOrchestrator:
         )
 
         t5 = _now()
-        ai_kept, ai_gated = gate_gemini_findings(
+        ai_gated_kept, ai_gated = gate_gemini_findings(
             gemini_findings=ai_judged,
             mechanical_findings=prior_findings,
             segments=segments,
@@ -335,29 +368,111 @@ class ReviewOrchestrator:
             started_at=t5,
             context={"input_from": "judge"},
             output_summary={
-                "kept": len(ai_kept),
+                "kept": len(ai_gated_kept),
                 "gated": len(ai_gated),
-                "kept_ids": [f.finding_id for f in ai_kept],
+                "kept_ids": [f.finding_id for f in ai_gated_kept],
                 "gated_ids": [f.finding_id for f in ai_gated],
             },
         )
 
+        t5b = _now()
+        ai_kept, ai_suppressed = adjudicate_findings(
+            findings=ai_gated_kept,
+            context=article_context,
+            segments=segments,
+            mechanical=prior_findings,
+        )
+        verdict_counts = Counter(
+            (f.adjudication_verdict.value if f.adjudication_verdict else "unset")
+            for f in [*ai_kept, *ai_suppressed]
+        )
+        stages.append(
+            ReviewStage(
+                stage_id="adjudication",
+                label_ar="التحكيم الدقيق",
+                summary={
+                    "shown": len(ai_kept),
+                    "suppressed": len(ai_suppressed),
+                    "verdicts": dict(verdict_counts),
+                },
+            )
+        )
+        self._log_step(
+            review_id=review_id,
+            pipeline_log=pipeline_log,
+            step_id="adjudicate",
+            label="Strict adjudicator (SHOW/SUPPRESS + silence rules)",
+            kind="gate",
+            started_at=t5b,
+            context={"article_type": article_context.article_type.value},
+            output_summary={
+                "shown_ids": [f.finding_id for f in ai_kept],
+                "suppressed": [
+                    {
+                        "finding_id": f.finding_id,
+                        "verdict": f.adjudication_verdict.value
+                        if f.adjudication_verdict
+                        else None,
+                        "errors": f.validation_errors[-2:],
+                    }
+                    for f in ai_suppressed
+                ],
+            },
+        )
+        ai_gated = [*ai_gated, *ai_suppressed]
+
         t6 = _now()
         all_findings = dedupe_findings([*prior_findings, *ai_kept])
-        valid, rejected = self.validator.validate(
-            all_findings, segments, document.document_id
+        punct_kept, punct_suppressed, punct_audit = gate_punctuation_findings(
+            all_findings,
+            policy=normalize_policy(settings.punctuation_policy),
+            segments=segments,
+            article_type=article_context.article_type.value
+            if article_context and article_context.article_type
+            else None,
         )
+        self._log_step(
+            review_id=review_id,
+            pipeline_log=pipeline_log,
+            step_id="punctuation_gate",
+            label=f"Punctuation policy gate ({normalize_policy(settings.punctuation_policy)})",
+            kind="gate",
+            started_at=t6,
+            context={"policy": normalize_policy(settings.punctuation_policy)},
+            output_summary={
+                "kept": len(punct_kept),
+                "suppressed": len(punct_suppressed),
+                "reason_counts": dict(
+                    Counter(a.get("reason_code") for a in punct_audit if a.get("reason_code"))
+                ),
+            },
+        )
+        stages.append(
+            ReviewStage(
+                stage_id="punctuation_gate",
+                label_ar="سياسة علامات الترقيم",
+                summary={
+                    "policy": normalize_policy(settings.punctuation_policy),
+                    "kept": len(punct_kept),
+                    "suppressed": len(punct_suppressed),
+                },
+            )
+        )
+        valid, rejected = self.validator.validate(
+            punct_kept, segments, document.document_id
+        )
+        validator_rejected = list(rejected)
 
-        if rejected:
+        if validator_rejected:
             error_map = {
                 f.finding_id: list(f.validation_errors)
-                for f in rejected
+                for f in validator_rejected
                 if f.validation_errors
             }
             for f in ai_gated:
                 if f.finding_id not in error_map and f.validation_errors:
                     error_map[f.finding_id] = list(f.validation_errors)
-            to_repair = [f for f in rejected if f.finding_id in error_map]
+            to_repair = [f for f in validator_rejected if f.finding_id in error_map]
             if to_repair:
                 t7 = _now()
                 repaired = await self.ai_client.repair_findings(
@@ -384,7 +499,7 @@ class ReviewOrchestrator:
                 )
                 repaired_ids = {f.finding_id for f in repaired}
                 still_unrepaired = [
-                    f for f in rejected if f.finding_id not in repaired_ids
+                    f for f in validator_rejected if f.finding_id not in repaired_ids
                 ]
                 valid = dedupe_findings([*valid, *repaired_valid])
                 rejected = [*still_unrepaired, *repaired_rejected]
@@ -419,6 +534,10 @@ class ReviewOrchestrator:
                 )
             )
 
+        # Punctuation policy suppressions are final — never send to LLM repair.
+        if punct_suppressed:
+            rejected = [*rejected, *punct_suppressed]
+
         self._log_step(
             review_id=review_id,
             pipeline_log=pipeline_log,
@@ -426,10 +545,11 @@ class ReviewOrchestrator:
             label="Schema validator (non-LLM)",
             kind="validate",
             started_at=t6,
-            context={"input_from": "gate (+ repair if any)"},
+            context={"input_from": "punctuation_gate (+ repair if any)"},
             output_summary={
                 "valid": len(valid),
                 "rejected": len(rejected),
+                "punctuation_suppressed": len(punct_suppressed),
                 "rejected_errors": {
                     f.finding_id: f.validation_errors for f in rejected if f.validation_errors
                 },
@@ -475,5 +595,6 @@ class ReviewOrchestrator:
             retrieved_rules=unique_rules,
             retrieved_entities=unique_entities,
             candidate_findings=ai_candidates,
+            article_context=article_context,
             pipeline_log=pipeline_log,
         )

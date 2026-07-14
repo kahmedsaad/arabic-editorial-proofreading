@@ -25,11 +25,20 @@ dev = [
 gemini = [
   "google-genai>=1.0.0",
 ]
+gcs = [
+  "google-cloud-storage>=2.18.0",
+]
+corpora = [
+  "datasets>=2.20.0",
+  "pyarrow>=15.0.0",
+]
 
 [project.scripts]
 proofread-import-pairs = "app.cli.import_pairs:main"
 proofread-evaluate = "app.cli.evaluate:main"
 proofread-run-benchmark = "app.cli.run_benchmark:main"
+proofread-upload-dataset = "app.cli.upload_dataset:main"
+proofread-download-dataset = "app.cli.download_dataset:main"
 benchmark-v2-score = "benchmark_v2.private.scorer.cli:main"
 benchmark-v2-run = "benchmark_v2.public.run_engine:main"
 

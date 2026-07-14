@@ -12,4 +12,13 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    preview: {
+      // Cloud Run / custom domains (vite preview fallback)
+      allowedHosts: true,
+    },
+    server: {
+      allowedHosts: true,
+    },
+  },
 });

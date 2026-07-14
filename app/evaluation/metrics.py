@@ -43,18 +43,28 @@ class EvalMetrics:
     details: list[dict[str, Any]] = field(default_factory=list)
 
 
-def load_golden(path: Path) -> list[EvalRecord]:
+def load_golden(path: Path | str) -> list[EvalRecord]:
+    """Load golden JSONL from a local path or gs:// URI via shared dataset loaders."""
+    path_str = str(path)
     records: list[EvalRecord] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        raw = json.loads(line)
+    from app.data.loader import is_gcs_path, resolve_loader_for_path
+
+    loader = resolve_loader_for_path(path_str)
+    if is_gcs_path(path_str):
+        rows = loader.read_jsonl(path_str)
+    else:
+        p = Path(path_str)
+        if not p.exists():
+            raise FileNotFoundError(p)
+        rows = loader.read_jsonl(str(p))
+
+    for raw in rows:
         issues = [EvalIssue(**item) for item in raw.get("expected_issues", [])]
         records.append(
             EvalRecord(
                 record_id=raw.get("record_id") or raw.get("pair_id") or "REC",
                 headline=raw.get("headline", ""),
-                body=raw.get("body") or raw.get("original_text", ""),
+                body=raw.get("body") or raw.get("original_text", "") or raw.get("mutated_text", ""),
                 expected_issues=issues,
             )
         )
@@ -137,7 +147,7 @@ def score_record(expected: list[EvalIssue], detected: list[dict[str, Any]]) -> d
 
 
 async def run_evaluation(
-    golden_path: Path,
+    golden_path: Path | str,
     review_fn,
 ) -> EvalMetrics:
     records = load_golden(golden_path)

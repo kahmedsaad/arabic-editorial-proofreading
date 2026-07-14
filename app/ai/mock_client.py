@@ -5,10 +5,13 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.models.schemas import (
+    ArticleContext,
     Decision,
+    EditorialHarm,
     EditorialRule,
     Finding,
     FindingSource,
+    RuleApplicability,
     Segment,
     Severity,
 )
@@ -134,11 +137,15 @@ class MockEditorialAIClient:
         mechanical_findings: list[Finding],
         rules: list[EditorialRule],
         entities: list | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]:
         findings: list[Finding] = []
         user = json.dumps(
             {
                 "document_id": document_id,
+                "article_context": (
+                    article_context.model_dump(mode="json") if article_context else None
+                ),
                 "segments": [s.model_dump(mode="json") for s in segments],
                 "mechanical_findings": [f.model_dump(mode="json") for f in mechanical_findings],
                 "rules": [r.model_dump(mode="json") for r in rules],
@@ -200,8 +207,12 @@ class MockEditorialAIClient:
                     end_offset=idx + len(marker),
                     rule_ids=["ATTR-001"],
                     explanation_ar="صياغة نسبة تحتاج مراجعة تحريرية.",
-                    confidence=0.8,
+                    confidence=0.96,
                     requires_editor_review=True,
+                    editorial_harm_if_ignored=EditorialHarm.MEDIUM,
+                    rule_applicability=RuleApplicability.CLEAR,
+                    would_interrupt_editor=True,
+                    article_context_resolves_issue=False,
                 )
             )
 
@@ -243,8 +254,10 @@ class MockEditorialAIClient:
         segments: list[Segment] | None = None,
         rules: list[EditorialRule] | None = None,
         entities: list[dict[str, Any]] | None = None,
+        article_context: ArticleContext | None = None,
     ) -> list[Finding]:
         judged: list[Finding] = []
+        _ = article_context  # available for future mock heuristics
         for finding in candidates:
             update: dict[str, Any] = {}
             if finding.decision in {
