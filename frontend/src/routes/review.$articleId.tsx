@@ -1,9 +1,18 @@
 import { createFileRoute, Link, Outlet, useParams } from "@tanstack/react-router";
+import { z } from "zod";
 import { AppShell } from "@/components/AppShell";
 import { findArticle } from "@/lib/articles";
-import { getAuthSession, isAdmin } from "@/lib/auth";
+import { getAuthSession, isAdmin, requireAuth } from "@/lib/auth";
+
+const reviewSearch = z.object({
+  autorun: z.coerce.number().optional(),
+}).parse;
 
 export const Route = createFileRoute("/review/$articleId")({
+  beforeLoad: () => {
+    requireAuth();
+  },
+  validateSearch: (input: Record<string, unknown>) => reviewSearch(input),
   component: ReviewLayout,
   head: () => ({ meta: [{ title: "مراجعة المقال" }] }),
 });

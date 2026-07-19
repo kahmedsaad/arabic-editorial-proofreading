@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getState } from "@/lib/store";
+import { requireAuth } from "@/lib/auth";
 import {
   authorRules,
   bulkRules,
@@ -15,6 +16,9 @@ import {
 } from "@/lib/api/mvp";
 
 export const Route = createFileRoute("/rules")({
+  beforeLoad: () => {
+    requireAuth();
+  },
   component: RulesPage,
   head: () => ({ meta: [{ title: "مستودع القواعد" }] }),
 });

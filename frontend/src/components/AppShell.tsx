@@ -13,8 +13,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setSession(getAuthSession());
-  }, []);
+    const current = getAuthSession();
+    setSession(current);
+    if (!current) {
+      navigate({ to: "/login" });
+    }
+  }, [navigate]);
 
   const admin = session?.role === "admin" || isAdmin();
 

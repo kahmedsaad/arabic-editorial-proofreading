@@ -1,17 +1,15 @@
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { setMode, useStore } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 import { allArticles } from "@/lib/articles";
-import { getAuthSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
-    if (typeof window !== "undefined" && !getAuthSession()) {
-      throw redirect({ to: "/login" });
-    }
+    requireAuth();
   },
   head: () => ({
     meta: [

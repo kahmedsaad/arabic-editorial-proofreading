@@ -3,7 +3,7 @@
  */
 
 import type { Article, Severity, Suggestion, SuggestionType } from "@/lib/types";
-import { authHeaders } from "@/lib/auth";
+import { authHeaders, clearAuthSession } from "@/lib/auth";
 
 export type MvpFinding = {
   finding_id: string;
@@ -129,6 +129,13 @@ async function apiFetch(path: string, init: RequestInit = {}, apiBase?: string) 
   const res = await fetch(`${base}${path}`, { ...init, headers });
   if (!res.ok) {
     const text = await res.text();
+    // Stale token after Cloud Run redeploy (ephemeral SQLite sessions): clear and re-login.
+    if (res.status === 401 && !path.includes("/auth/login") && headers.Authorization) {
+      clearAuthSession();
+      if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
+        window.location.assign("/login");
+      }
+    }
     throw new Error(`${path} failed (${res.status}): ${text.slice(0, 300)}`);
   }
   if (res.status === 204) return null;

@@ -8,10 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useRef, useState } from "react";
 import { checkMvpHealth } from "@/lib/api/mvp";
+import { requireAuth } from "@/lib/auth";
 
 const search = z.object({ focus: z.string().optional() }).parse;
 
 export const Route = createFileRoute("/settings")({
+  beforeLoad: () => {
+    requireAuth();
+  },
   validateSearch: (input: Record<string, unknown>) => search(input),
   component: SettingsPage,
   head: () => ({ meta: [{ title: "الإعدادات" }] }),

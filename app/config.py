@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     enable_letter_variant_warnings: bool = False
     # Punctuation policy: off | strict | full (default strict — suppress style noise)
     punctuation_policy: str = "strict"
+    # Editorial precision policy: off | run5 (frozen) | run5b (revised).
+    editorial_gate_policy: str = "off"
 
     # Demo auth — read from .env on every startup (change ADMIN_PASSWORD there)
     public_password: str = "demo"

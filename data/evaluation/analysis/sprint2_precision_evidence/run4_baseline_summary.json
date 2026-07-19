@@ -1,4 +1,99 @@
 {
-  "status": "pending",
-  "path": "C:\\Users\\khhab\\Downloads\\ai-proofreading\\data\\evaluation\\runs\\gemini_run4_no_punctuation\\report.json"
+  "run_id": "gemini_run4_no_punctuation",
+  "dataset": "data\\local\\sprint2\\silence_v1.jsonl",
+  "created_at": "2026-07-14T10:39:13.315093+00:00",
+  "punctuation_policy": "off",
+  "n_articles": 300,
+  "articles_with_fp": 121,
+  "clean_article_fp_rate": 0.4033,
+  "total_findings": 192,
+  "findings_per_article": 0.64,
+  "fp_by_category": {
+    "attribution": 44,
+    "clarity": 34,
+    "headline_body_mismatch": 25,
+    "spelling": 20,
+    "numeric_contradiction": 17,
+    "entity_name": 15,
+    "loaded_framing": 13,
+    "publisher_voice": 10,
+    "attribution_strength": 5,
+    "repetition": 3,
+    "grammar": 2,
+    "entity_confusion": 2,
+    "unsupported_certainty": 1,
+    "consistency": 1
+  },
+  "clean_fp_rate_all": 0.4033,
+  "clean_fp_rate_editorial_only": 0.4033,
+  "clean_fp_rate_punctuation_only": 0.0,
+  "findings_per_article_all": 0.64,
+  "findings_per_article_editorial_only": 0.64,
+  "findings_per_article_punctuation_only": 0.0,
+  "zero_finding_clean_article_rate": 0.5967,
+  "zero_editorial_finding_clean_article_rate": 0.5967,
+  "category_report": {
+    "punctuation": {
+      "count": 0,
+      "rate_per_article": 0.0
+    },
+    "attribution": {
+      "count": 49,
+      "rate_per_article": 0.1633
+    },
+    "clarity": {
+      "count": 34,
+      "rate_per_article": 0.1133
+    },
+    "headline_mismatch": {
+      "count": 35,
+      "rate_per_article": 0.1167
+    },
+    "quote_voice": {
+      "count": 0,
+      "rate_per_article": 0.0
+    },
+    "loaded_framing": {
+      "count": 13,
+      "rate_per_article": 0.0433
+    },
+    "entity_consistency": {
+      "count": 17,
+      "rate_per_article": 0.0567
+    },
+    "numeric_consistency": {
+      "count": 17,
+      "rate_per_article": 0.0567
+    },
+    "temporal_consistency": {
+      "count": 0,
+      "rate_per_article": 0.0
+    }
+  },
+  "total_findings_editorial": 192,
+  "total_findings_punctuation": 0,
+  "fp_by_family": {
+    "attribution": 49,
+    "clarity": 34,
+    "headline_body_mismatch": 25,
+    "spelling": 20,
+    "numeric_contradiction": 17,
+    "entity_name": 15,
+    "loaded_framing": 13,
+    "headline_compression": 10,
+    "repetition": 3,
+    "grammar": 2,
+    "entity_confusion": 2,
+    "unsupported_certainty": 1,
+    "consistency": 1
+  },
+  "target_clean_fp_rate": 0.1,
+  "run4_intermediate_targets": {
+    "clean_fp_rate_all": 0.25,
+    "clean_fp_rate_editorial_only": 0.15,
+    "punctuation_findings_strict_max": 30,
+    "findings_per_article_all": 0.3,
+    "zero_finding_clean_article_rate": 0.75
+  },
+  "notes": "Silence set: expected_issues empty -> every finding counts as FP. Freeze this report before prompt/gate changes; compare run4 vs run3."
 }

@@ -32,6 +32,7 @@ from app.evaluation.metrics import load_golden  # noqa: E402
 from app.config import settings  # noqa: E402
 from app.models.schemas import ReviewRequest  # noqa: E402
 from app.orchestration.review import ReviewOrchestrator  # noqa: E402
+from app.postprocess.editorial_gate import normalize_editorial_gate_policy  # noqa: E402
 from app.postprocess.punctuation_policy import normalize_policy  # noqa: E402
 
 FP_FAMILIES = (
@@ -66,6 +67,10 @@ async def _run(dataset: Path, run_id: str, out_dir: Path) -> dict:
     article_rows: list[dict] = []
     label_rows: list[dict] = []
     family_counts: Counter[str] = Counter()
+    editorial_suppression_counts: Counter[str] = Counter()
+    editorial_suppression_examples: list[dict] = []
+    editorial_suppression_rows: list[dict] = []
+    editorial_diagnostic_rows: list[dict] = []
     per_article_categories: list[list[str]] = []
 
     for i, record in enumerate(records, start=1):
@@ -79,6 +84,54 @@ async def _run(dataset: Path, run_id: str, out_dir: Path) -> dict:
             )
         )
         findings = list(response.findings or [])
+        editorial_step = next(
+            (step for step in response.pipeline_log if step.step_id == "editorial_gate"),
+            None,
+        )
+        if editorial_step is not None:
+            for event in editorial_step.output_summary.get("diagnostics") or []:
+                editorial_diagnostic_rows.append(
+                    {"record_id": record.record_id, **event}
+                )
+        article_suppression_counts: Counter[str] = Counter()
+        for rejected in response.rejected_findings or []:
+            payload = rejected.model_dump() if hasattr(rejected, "model_dump") else dict(rejected)
+            gate_reasons = [
+                error[len("editorial_gate:") :]
+                for error in (payload.get("validation_errors") or [])
+                if isinstance(error, str) and error.startswith("editorial_gate:")
+            ]
+            if gate_reasons:
+                editorial_suppression_rows.append(
+                    {
+                        "record_id": record.record_id,
+                        "finding_id": payload.get("finding_id"),
+                        "category": payload.get("category"),
+                        "source": payload.get("source"),
+                        "original_text": payload.get("original_text"),
+                        "explanation_ar": payload.get("explanation_ar"),
+                        "reason_codes": gate_reasons,
+                        "validation_errors": payload.get("validation_errors"),
+                    }
+                )
+            for error in rejected.validation_errors or []:
+                prefix = "editorial_gate:"
+                if not error.startswith(prefix):
+                    continue
+                reason = error[len(prefix) :]
+                editorial_suppression_counts[reason] += 1
+                article_suppression_counts[reason] += 1
+                if len(editorial_suppression_examples) < 30:
+                    editorial_suppression_examples.append(
+                        {
+                            "record_id": record.record_id,
+                            "finding_id": rejected.finding_id,
+                            "category": rejected.category,
+                            "reason_code": reason,
+                            "original_text": rejected.original_text,
+                            "explanation_ar": rejected.explanation_ar,
+                        }
+                    )
         cats: list[str] = []
         for finding in findings:
             payload = finding.model_dump() if hasattr(finding, "model_dump") else dict(finding)
@@ -118,6 +171,7 @@ async def _run(dataset: Path, run_id: str, out_dir: Path) -> dict:
                 "record_id": record.record_id,
                 "finding_count": len(findings),
                 "categories": cats,
+                "editorial_suppression_counts": dict(article_suppression_counts),
             }
         )
 
@@ -127,8 +181,15 @@ async def _run(dataset: Path, run_id: str, out_dir: Path) -> dict:
         "dataset": str(dataset),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "punctuation_policy": normalize_policy(settings.punctuation_policy),
+        "editorial_gate_policy": normalize_editorial_gate_policy(
+            settings.editorial_gate_policy
+        ),
         **split,
         "fp_by_family": dict(family_counts.most_common()),
+        "editorial_suppression_reason_counts": dict(
+            editorial_suppression_counts.most_common()
+        ),
+        "editorial_suppression_examples": editorial_suppression_examples,
         "target_clean_fp_rate": 0.10,
         "run4_intermediate_targets": {
             "clean_fp_rate_all": 0.25,
@@ -154,8 +215,18 @@ async def _run(dataset: Path, run_id: str, out_dir: Path) -> dict:
     with labels_path.open("w", encoding="utf-8") as fh:
         for row in label_rows:
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+    suppressions_path = out_dir / "editorial_gate_suppressions.jsonl"
+    with suppressions_path.open("w", encoding="utf-8") as fh:
+        for row in editorial_suppression_rows:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+    diagnostics_path = out_dir / "editorial_gate_diagnostics.jsonl"
+    with diagnostics_path.open("w", encoding="utf-8") as fh:
+        for row in editorial_diagnostic_rows:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
 
     report["labels_path"] = str(labels_path)
+    report["editorial_gate_suppressions_path"] = str(suppressions_path)
+    report["editorial_gate_diagnostics_path"] = str(diagnostics_path)
     return report
 
 

@@ -1,0 +1,16 @@
+category,bucket,baseline,candidate,delta
+attribution,attribution,35,44,9
+attribution_strength,attribution,5,5,0
+clarity,clarity,34,34,0
+consistency,consistency,1,1,0
+entity_confusion,entity_consistency,2,2,0
+entity_name,entity_consistency,15,15,0
+grammar,grammar,1,2,1
+headline_body_mismatch,headline_mismatch,20,25,5
+loaded_framing,loaded_framing,14,13,-1
+numeric_contradiction,numeric_consistency,14,17,3
+publisher_voice,headline_mismatch,3,10,7
+punctuation,punctuation,432,0,-432
+repetition,repetition,3,3,0
+spelling,spelling,13,20,7
+unsupported_certainty,unsupported_certainty,3,1,-2

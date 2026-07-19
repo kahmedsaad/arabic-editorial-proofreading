@@ -45,11 +45,25 @@ class FindingValidator:
         segments: list[Segment],
         document_id: str,
     ) -> tuple[list[Finding], list[Finding]]:
+        valid, rejected, _ = self.validate_with_diagnostics(
+            findings, segments, document_id
+        )
+        return valid, rejected
+
+    def validate_with_diagnostics(
+        self,
+        findings: list[Finding],
+        segments: list[Segment],
+        document_id: str,
+    ) -> tuple[list[Finding], list[Finding], list[dict[str, object]]]:
+        """Validate findings and return admin-only per-finding audit details."""
         by_id = {s.segment_id: s for s in segments}
         valid: list[Finding] = []
         rejected: list[Finding] = []
+        diagnostics: list[dict[str, object]] = []
 
         for finding in findings:
+            before_realign = finding
             finding = self._realign_offsets(finding, by_id)
             errors = self._errors(finding, by_id, document_id)
             updated = finding.model_copy(
@@ -62,11 +76,24 @@ class FindingValidator:
                     or finding.severity in {Severity.HIGH, Severity.CRITICAL},
                 }
             )
+            diagnostics.append(
+                {
+                    "finding_id": finding.finding_id,
+                    "offset_realign_ran": (
+                        before_realign.start_offset != finding.start_offset
+                        or before_realign.end_offset != finding.end_offset
+                    ),
+                    "before_realign": before_realign.model_dump(mode="json"),
+                    "after_realign": finding.model_dump(mode="json"),
+                    "validation_errors": list(errors),
+                    "outcome": "rejected" if errors else "valid",
+                }
+            )
             if errors:
                 rejected.append(updated)
             else:
                 valid.append(updated)
-        return valid, rejected
+        return valid, rejected, diagnostics
 
     def _realign_offsets(
         self, finding: Finding, segments: dict[str, Segment]

@@ -1,0 +1,551 @@
+[
+  {
+    "case_id": "D01",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D01",
+        "zone": "headline",
+        "text": "ارتفاع المبيعات",
+        "normalized_text": "ارتفاع المبيعات",
+        "start_offset": 0,
+        "end_offset": 15,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D01",
+        "zone": "body",
+        "text": "ارتفعت مبيعات الشركة من 10 ملايين ريال إلى 12 مليون ريال خلال عام واحد، وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "normalized_text": "ارتفعت مبيعات الشركة من 10 ملايين ريال الي 12 مليون ريال خلال عام واحد, وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "start_offset": 0,
+        "end_offset": 108,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D01",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+            "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+            "start_offset": 75,
+            "end_offset": 108,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "الجملة تشير إلى تراجع في المبيعات بمقدار مليوني ريال، بينما الأرقام المذكورة سابقًا (من 10 ملايين إلى 12 مليون ريال) تشير إلى ارتفاع بنفس المقدار. هذا تناقض مباشر في المعلومات العددية.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D01",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+            "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+            "start_offset": 75,
+            "end_offset": 108,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "الجملة تشير إلى تراجع في المبيعات بمقدار مليوني ريال، بينما الأرقام المذكورة سابقًا (من 10 ملايين إلى 12 مليون ريال) تشير إلى ارتفاع بنفس المقدار. هذا تناقض مباشر في المعلومات العددية.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {}
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-001",
+              "document_id": "UI-D01",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "hard_warning",
+              "severity": "high",
+              "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+              "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+              "start_offset": 72,
+              "end_offset": 108,
+              "rule_ids": [
+                "CONS-CLAIM",
+                "CONS-NUMBER"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "الجملة تشير إلى تراجع في المبيعات بمقدار مليوني ريال، بينما الأرقام المذكورة سابقًا (من 10 ملايين إلى 12 مليون ريال) تشير إلى ارتفاع بنفس المقدار. هذا تناقض مباشر في المعلومات العددية.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 0
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-001",
+        "document_id": "UI-D01",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "hard_warning",
+        "severity": "high",
+        "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+        "start_offset": 72,
+        "end_offset": 108,
+        "rule_ids": [
+          "CONS-CLAIM",
+          "CONS-NUMBER"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "الجملة تشير إلى تراجع في المبيعات بمقدار مليوني ريال، بينما الأرقام المذكورة سابقًا (من 10 ملايين إلى 12 مليون ريال) تشير إلى ارتفاع بنفس المقدار. هذا تناقض مباشر في المعلومات العددية.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": []
+  },
+  {
+    "case_id": "D06",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D06",
+        "zone": "headline",
+        "text": "بدء المشروع في سبتمبر",
+        "normalized_text": "بدء المشروع في سبتمبر",
+        "start_offset": 0,
+        "end_offset": 21,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D06",
+        "zone": "body",
+        "text": "أكدت الشركة أن تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو ولن تبدأ قبل الحصول على الموافقة النهائية.",
+        "normalized_text": "اكدت الشركة ان تنفيذ المشروع سيبدا في سبتمبر المقبل. واضافت ان الاعمال انطلقت فعليا في يوليو ولن تبدا قبل الحصول علي الموافقة النهائية.",
+        "start_offset": 0,
+        "end_offset": 135,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "internal_inconsistency",
+            "decision": "needs_editor_review",
+            "severity": "high",
+            "original_text": "تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 13,
+            "end_offset": 88,
+            "rule_ids": [
+              "CONS-CLAIM"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض داخلي في النص حيث يذكر أن 'تنفيذ المشروع سيبدأ في سبتمبر المقبل' ثم يضيف أن 'الأعمال انطلقت فعليا في يوليو'. هذا يخلق ارتباكًا حول تاريخ بدء المشروع الفعلي، مما يؤثر أيضًا على دقة العنوان الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "internal_inconsistency",
+            "decision": "needs_editor_review",
+            "severity": "high",
+            "original_text": "تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 13,
+            "end_offset": 88,
+            "rule_ids": [
+              "CONS-CLAIM"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض داخلي في النص حيث يذكر أن 'تنفيذ المشروع سيبدأ في سبتمبر المقبل' ثم يضيف أن 'الأعمال انطلقت فعليا في يوليو'. هذا يخلق ارتباكًا حول تاريخ بدء المشروع الفعلي، مما يؤثر أيضًا على دقة العنوان الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ]
+      },
+      {
+        "stage": "repair_request",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "internal_inconsistency",
+            "decision": "needs_editor_review",
+            "severity": "high",
+            "original_text": "تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 15,
+            "end_offset": 92,
+            "rule_ids": [
+              "CONS-CLAIM"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض داخلي في النص حيث يذكر أن 'تنفيذ المشروع سيبدأ في سبتمبر المقبل' ثم يضيف أن 'الأعمال انطلقت فعليا في يوليو'. هذا يخلق ارتباكًا حول تاريخ بدء المشروع الفعلي، مما يؤثر أيضًا على دقة العنوان الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "invalid",
+            "validation_errors": [
+              "unknown category: internal_inconsistency"
+            ],
+            "adjudication_verdict": "SHOW",
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "validation_errors": {
+          "FND-AI-0001": [
+            "unknown category: internal_inconsistency"
+          ]
+        }
+      },
+      {
+        "stage": "repair_response",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "contradiction",
+            "decision": "needs_editor_review",
+            "severity": "high",
+            "original_text": "تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 15,
+            "end_offset": 92,
+            "rule_ids": [
+              "CONS-CLAIM"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض داخلي في النص حيث يذكر أن 'تنفيذ المشروع سيبدأ في سبتمبر المقبل' ثم يضيف أن 'الأعمال انطلقت فعليا في يوليو'. هذا يخلق ارتباكًا حول تاريخ بدء المشروع الفعلي، مما يؤثر أيضًا على دقة العنوان الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "valid",
+            "validation_errors": [],
+            "adjudication_verdict": "SHOW",
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-0001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-0001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "repair",
+        "context": {
+          "validation_errors": {
+            "FND-AI-0001": [
+              "unknown category: internal_inconsistency"
+            ]
+          }
+        },
+        "output_summary": {
+          "repaired_returned": 1
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 0,
+          "rejected": 1,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {
+            "FND-AI-0001": [
+              "unknown category: contradiction"
+            ]
+          }
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [],
+          "rejected_count": 1
+        }
+      }
+    ],
+    "findings": [],
+    "rejected_findings": [
+      {
+        "finding_id": "FND-AI-0001",
+        "document_id": "UI-D06",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "contradiction",
+        "decision": "needs_editor_review",
+        "severity": "high",
+        "original_text": "تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+        "suggested_text": null,
+        "start_offset": 15,
+        "end_offset": 92,
+        "rule_ids": [
+          "CONS-CLAIM"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "يوجد تناقض داخلي في النص حيث يذكر أن 'تنفيذ المشروع سيبدأ في سبتمبر المقبل' ثم يضيف أن 'الأعمال انطلقت فعليا في يوليو'. هذا يخلق ارتباكًا حول تاريخ بدء المشروع الفعلي، مما يؤثر أيضًا على دقة العنوان الذي يشير إلى بدء المشروع في سبتمبر.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "invalid",
+        "validation_errors": [
+          "unknown category: contradiction"
+        ],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ]
+  }
+]

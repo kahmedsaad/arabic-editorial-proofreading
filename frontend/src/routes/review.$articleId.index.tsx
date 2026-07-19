@@ -1,5 +1,5 @@
-import { createFileRoute, useParams } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { findArticle } from "@/lib/articles";
 import { ArticleView } from "@/components/ArticleView";
 import { SuggestionCard } from "@/components/SuggestionCard";
@@ -15,12 +15,21 @@ export const Route = createFileRoute("/review/$articleId/")({
 
 function ReviewIndex() {
   const { articleId } = useParams({ from: "/review/$articleId/" });
+  const { autorun } = useSearch({ from: "/review/$articleId" });
   const article = findArticle(articleId)!;
   const suggestions = useStore((s) => s.suggestions[articleId] ?? []);
   const mode = useStore((s) => s.mode);
   const [activeId, setActiveId] = useState<string | undefined>();
   const [filter, setFilter] = useState<"all" | "open" | "decided" | "high">("open");
   const { status, phases, run, reset, lastReview } = usePipeline(articleId);
+  const autorunFired = useRef(false);
+
+  useEffect(() => {
+    if (autorun === 1 && !autorunFired.current && status === "idle") {
+      autorunFired.current = true;
+      void run();
+    }
+  }, [autorun, run, status]);
 
   const filtered = useMemo(() => {
     return suggestions.filter((s) => {

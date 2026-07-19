@@ -1,3 +1,5 @@
+import { redirect } from "@tanstack/react-router";
+
 const TOKEN_KEY = "aj-demo/auth-token";
 const ROLE_KEY = "aj-demo/auth-role";
 const USER_KEY = "aj-demo/auth-user";
@@ -7,6 +9,13 @@ export type AuthSession = {
   role: "user" | "admin";
   username: string;
 };
+
+/** Route guard: redirect unauthenticated users to login. */
+export function requireAuth() {
+  if (typeof window !== "undefined" && !getAuthSession()) {
+    throw redirect({ to: "/login" });
+  }
+}
 
 export function getAuthSession(): AuthSession | null {
   if (typeof window === "undefined") return null;

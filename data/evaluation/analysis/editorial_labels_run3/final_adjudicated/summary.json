@@ -1,0 +1,191 @@
+{
+  "input": "data\\evaluation\\analysis\\editorial_labels_run3\\final_adjudicated_for_scoring.jsonl",
+  "precision_formula": "precision = keep / (keep + drop); uncertain excluded from denominator",
+  "total_rows": 163,
+  "total_labeled": 163,
+  "unlabeled_rows": 0,
+  "keep_count": 18,
+  "drop_count": 131,
+  "uncertain_count": 14,
+  "precision_overall": 0.1208,
+  "precision_by_category": {
+    "Attribution": 0.0,
+    "Clarity": 0.0,
+    "Headline mismatch": 0.35,
+    "Entity consistency": 0.0,
+    "Loaded framing": 0.0,
+    "Numeric consistency": 0.6,
+    "spelling": 0.2308,
+    "unsupported_certainty": 0.3333,
+    "repetition": 0.6667,
+    "consistency": 1.0,
+    "grammar": 1.0
+  },
+  "drop_rate_by_category": {
+    "Attribution": 1.0,
+    "Clarity": 1.0,
+    "Headline mismatch": 0.65,
+    "Entity consistency": 1.0,
+    "Loaded framing": 1.0,
+    "Numeric consistency": 0.4,
+    "spelling": 0.7692,
+    "unsupported_certainty": 0.6667,
+    "repetition": 0.3333,
+    "consistency": 0.0,
+    "grammar": 0.0
+  },
+  "drop_reason_distribution": {
+    "too_low_impact": 53,
+    "optional_style": 45,
+    "headline_compression": 14,
+    "incorrect_rule": 10,
+    "acceptable_arabic": 7,
+    "context_resolves_issue": 2
+  },
+  "average_findings_per_article": 1.5673,
+  "articles_with_editorial_fp": 104,
+  "high_severity_false_positive_rate": 0.623,
+  "allowed_decisions": [
+    "drop",
+    "keep",
+    "uncertain"
+  ],
+  "allowed_drop_reasons": [
+    "acceptable_arabic",
+    "context_resolves_issue",
+    "duplicate",
+    "headline_compression",
+    "incorrect_category",
+    "incorrect_rule",
+    "optional_style",
+    "other",
+    "out_of_scope_fact_check",
+    "too_low_impact",
+    "valid_quotation",
+    "wrong_span"
+  ],
+  "table": [
+    {
+      "category": "Attribution",
+      "findings": 40,
+      "keep": 0,
+      "drop": 40,
+      "uncertain": 0,
+      "precision": 0.0,
+      "drop_rate_excluding_uncertain": 1.0,
+      "drop_rate_among_labeled": 1.0,
+      "main_drop_reason": "too_low_impact"
+    },
+    {
+      "category": "Clarity",
+      "findings": 34,
+      "keep": 0,
+      "drop": 34,
+      "uncertain": 0,
+      "precision": 0.0,
+      "drop_rate_excluding_uncertain": 1.0,
+      "drop_rate_among_labeled": 1.0,
+      "main_drop_reason": "too_low_impact"
+    },
+    {
+      "category": "Headline mismatch",
+      "findings": 23,
+      "keep": 7,
+      "drop": 13,
+      "uncertain": 3,
+      "precision": 0.35,
+      "drop_rate_excluding_uncertain": 0.65,
+      "drop_rate_among_labeled": 0.5652,
+      "main_drop_reason": "headline_compression"
+    },
+    {
+      "category": "Entity consistency",
+      "findings": 17,
+      "keep": 0,
+      "drop": 15,
+      "uncertain": 2,
+      "precision": 0.0,
+      "drop_rate_excluding_uncertain": 1.0,
+      "drop_rate_among_labeled": 0.8824,
+      "main_drop_reason": "optional_style"
+    },
+    {
+      "category": "Loaded framing",
+      "findings": 14,
+      "keep": 0,
+      "drop": 14,
+      "uncertain": 0,
+      "precision": 0.0,
+      "drop_rate_excluding_uncertain": 1.0,
+      "drop_rate_among_labeled": 1.0,
+      "main_drop_reason": "incorrect_rule"
+    },
+    {
+      "category": "Numeric consistency",
+      "findings": 14,
+      "keep": 3,
+      "drop": 2,
+      "uncertain": 9,
+      "precision": 0.6,
+      "drop_rate_excluding_uncertain": 0.4,
+      "drop_rate_among_labeled": 0.1429,
+      "main_drop_reason": "context_resolves_issue"
+    },
+    {
+      "category": "spelling",
+      "findings": 13,
+      "keep": 3,
+      "drop": 10,
+      "uncertain": 0,
+      "precision": 0.2308,
+      "drop_rate_excluding_uncertain": 0.7692,
+      "drop_rate_among_labeled": 0.7692,
+      "main_drop_reason": "optional_style"
+    },
+    {
+      "category": "unsupported_certainty",
+      "findings": 3,
+      "keep": 1,
+      "drop": 2,
+      "uncertain": 0,
+      "precision": 0.3333,
+      "drop_rate_excluding_uncertain": 0.6667,
+      "drop_rate_among_labeled": 0.6667,
+      "main_drop_reason": "headline_compression"
+    },
+    {
+      "category": "repetition",
+      "findings": 3,
+      "keep": 2,
+      "drop": 1,
+      "uncertain": 0,
+      "precision": 0.6667,
+      "drop_rate_excluding_uncertain": 0.3333,
+      "drop_rate_among_labeled": 0.3333,
+      "main_drop_reason": "optional_style"
+    },
+    {
+      "category": "consistency",
+      "findings": 1,
+      "keep": 1,
+      "drop": 0,
+      "uncertain": 0,
+      "precision": 1.0,
+      "drop_rate_excluding_uncertain": 0.0,
+      "drop_rate_among_labeled": 0.0,
+      "main_drop_reason": ""
+    },
+    {
+      "category": "grammar",
+      "findings": 1,
+      "keep": 1,
+      "drop": 0,
+      "uncertain": 0,
+      "precision": 1.0,
+      "drop_rate_excluding_uncertain": 0.0,
+      "drop_rate_among_labeled": 0.0,
+      "main_drop_reason": ""
+    }
+  ],
+  "validation_ok": true
+}

@@ -1,0 +1,14 @@
+{
+  "source_index": 40,
+  "label_id": "gemini_run3:ANAD-015348:FND-AI-0001",
+  "category": "headline_body_mismatch",
+  "decision": "keep",
+  "drop_reason": null,
+  "original_text": "مايكروسوفت تفتح برنامج Windows Live Messenger",
+  "suggested_text": null,
+  "rationale": "Material contradiction claimed between headline/body (or internal spans).",
+  "explanation_ar": "يتناقض العنوان الذي يفيد بأن مايكروسوفت 'تفتح' البرنامج بشكل قاطع مع نص المقال الذي يذكر أن البرنامج 'لا يزال يتطلب دعوة للدخول' وأن الخبر مستند إلى 'بعض المواقع المتخصصة' وليس إعلاناً رسمياً من مايكروسوفت بفتحه للجميع.",
+  "headline": "مايكروسوفت تفتح برنامج Windows Live Messenger",
+  "body_excerpt": "نشرت بعض المواقع المتخصصة في العالم التقني على شبكة الإنترنت، بما في ذلك موقع liveside.net، خبراً مفاده أن شركة مايكروسوفت أتاحت برنامج التراسل الفوري (Windows Live Messenger) بصورة غير معلنة لكافة المستخدمين الذين يتمتعون بعضوية في خدمة Microsoft Passport. وقد كان الدخول إلى هذا البرنامج محصور بهؤلاء الذين تلقوا دعوة لذلك، الأمر الذي أحبط المستخدمين الآخرين الذين حصلوا على البرنامج من خلال مصادر ",
+  "label_confidence": "high"
+}

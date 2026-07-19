@@ -6,7 +6,10 @@ import time
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from app.ai.fewshot import MUST_CHECK_RULES, load_golden_fewshots
+from app.category_canonicalization import canonicalize_category
 from app.config import ROOT_DIR, settings
 from app.models.schemas import (
     ArticleContext,
@@ -23,6 +26,64 @@ from app.rules.bulk import free_text_to_rule_stub, parse_rules_paste
 logger = logging.getLogger(__name__)
 
 PROMPT_DIR = ROOT_DIR / "prompts" / "gemini" / "v1"
+
+
+class GeminiResponseParseError(ValueError):
+    def __init__(self, failure_type: str, safe_reason: str) -> None:
+        super().__init__(safe_reason)
+        self.failure_type = failure_type
+        self.safe_reason = safe_reason
+
+
+def _decode_array_envelope(
+    raw: str,
+    *,
+    field: str,
+) -> tuple[list[Any], str]:
+    text = raw.strip()
+    if text.startswith("```"):
+        text = text.strip("`")
+        if text.startswith("json"):
+            text = text[4:].strip()
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise GeminiResponseParseError(
+            "json_decode_error",
+            f"invalid_json_at_position_{exc.pos}",
+        ) from exc
+
+    if isinstance(data, list):
+        return data, "top_level_list"
+    if isinstance(data, dict):
+        if field not in data:
+            raise GeminiResponseParseError(
+                "missing_envelope_field",
+                f"object_missing_{field}_list",
+            )
+        items = data[field]
+        if not isinstance(items, list):
+            raise GeminiResponseParseError(
+                "invalid_envelope_field_type",
+                f"{field}_must_be_list",
+            )
+        return items, "object_envelope"
+    raise GeminiResponseParseError(
+        "invalid_top_level_type",
+        f"top_level_{type(data).__name__}_not_supported",
+    )
+
+
+def _safe_validation_reason(exc: Exception) -> str:
+    if not isinstance(exc, ValidationError):
+        return "schema_validation_error"
+    errors = exc.errors(include_url=False, include_context=False, include_input=False)
+    if not errors:
+        return "schema_validation_error"
+    first = errors[0]
+    location = ".".join(str(part) for part in first.get("loc", ())) or "item"
+    error_type = str(first.get("type") or "invalid")
+    return f"schema_validation_error:{location}:{error_type}"
 
 
 class GeminiEditorialAIClient:
@@ -43,6 +104,8 @@ class GeminiEditorialAIClient:
         self.last_latency_ms: float | None = None
         self.last_token_usage: dict[str, Any] | None = None
         self.last_call_trace: dict[str, Any] | None = None
+        self.last_category_canonicalization: list[dict[str, Any]] = []
+        self.last_parse_diagnostic: dict[str, Any] | None = None
         self._fewshots = load_golden_fewshots(settings.golden_editorial_path)
 
     def _phase_prompt(self, phase: str) -> str:
@@ -127,33 +190,60 @@ class GeminiEditorialAIClient:
         }
         return json.dumps(payload, ensure_ascii=False)
 
-    def _fallback_finding(
-        self, document_id: str, segments: list[Segment], reason: str
-    ) -> list[Finding]:
-        if not segments:
-            return []
-        segment = segments[0]
-        span = segment.text[: min(12, len(segment.text))] or segment.text
-        end = len(span)
-        return [
-            Finding(
-                finding_id="FND-AI-FALLBACK",
-                document_id=document_id,
-                segment_id=segment.segment_id,
-                source=FindingSource.GEMINI,
-                category="clarity",
-                decision=Decision.NEEDS_EDITOR_REVIEW,
-                severity=Severity.MEDIUM,
-                original_text=span,
-                suggested_text=None,
-                start_offset=0,
-                end_offset=end,
-                rule_ids=[],
-                explanation_ar=f"تعذر إكمال تحليل النموذج: {reason}",
-                confidence=0.0,
-                requires_editor_review=True,
-            )
-        ]
+    def _record_parse_diagnostic(self, diagnostic: dict[str, Any]) -> None:
+        self.last_parse_diagnostic = diagnostic
+        if self.last_call_trace is None:
+            self.last_call_trace = {
+                "phase": diagnostic["phase"],
+                "system_prompt": None,
+                "user_payload": None,
+                "raw_response": None,
+            }
+        self.last_call_trace["parser_diagnostic"] = diagnostic
+
+    def _record_phase_failure(
+        self,
+        *,
+        phase: str,
+        failure_type: str,
+        safe_reason: str,
+        fallback_used: bool,
+        fallback_type: str | None,
+    ) -> None:
+        self._record_parse_diagnostic(
+            {
+                "phase": phase,
+                "status": "degraded",
+                "failure_type": failure_type,
+                "safe_reason": safe_reason,
+                "envelope_type": None,
+                "valid_item_count": 0,
+                "rejected_item_count": 0,
+                "rejected_item_indexes": [],
+                "rejected_items": [],
+                "fallback_used": fallback_used,
+                "fallback_type": fallback_type,
+            }
+        )
+
+    def _mark_parse_fallback(self, fallback_type: str) -> None:
+        diagnostic = dict(
+            self.last_parse_diagnostic
+            or {
+                "phase": "unknown",
+                "status": "degraded",
+                "failure_type": "unknown_failure",
+                "safe_reason": "fallback_used",
+                "envelope_type": None,
+                "valid_item_count": 0,
+                "rejected_item_count": 0,
+                "rejected_item_indexes": [],
+                "rejected_items": [],
+            }
+        )
+        diagnostic["fallback_used"] = True
+        diagnostic["fallback_type"] = fallback_type
+        self._record_parse_diagnostic(diagnostic)
 
     _DECISION_ALIASES = {
         "suggestion": Decision.SUGGEST,
@@ -174,21 +264,58 @@ class GeminiEditorialAIClient:
         aliased = self._DECISION_ALIASES.get(raw)
         return aliased.value if aliased else Decision.NEEDS_EDITOR_REVIEW.value
 
-    def _parse_findings(self, raw: str, document_id: str) -> list[Finding]:
-        text = raw.strip()
-        if text.startswith("```"):
-            text = text.strip("`")
-            if text.startswith("json"):
-                text = text[4:].strip()
-        data = json.loads(text)
-        items = data.get("findings", data if isinstance(data, list) else [])
+    def _parse_findings(
+        self,
+        raw: str,
+        document_id: str,
+        *,
+        phase: str = "unknown",
+    ) -> list[Finding]:
+        try:
+            items, envelope_type = _decode_array_envelope(raw, field="findings")
+        except GeminiResponseParseError as exc:
+            self._record_phase_failure(
+                phase=phase,
+                failure_type=exc.failure_type,
+                safe_reason=exc.safe_reason,
+                fallback_used=False,
+                fallback_type=None,
+            )
+            raise
+
         findings: list[Finding] = []
-        for index, item in enumerate(items, start=1):
-            item = dict(item)
+        category_audit: list[dict[str, Any]] = []
+        rejected_items: list[dict[str, Any]] = []
+        for item_index, raw_item in enumerate(items):
+            if not isinstance(raw_item, dict):
+                rejected_items.append(
+                    {
+                        "index": item_index,
+                        "failure_type": "invalid_item_type",
+                        "safe_reason": "finding_item_must_be_object",
+                    }
+                )
+                continue
+            item = dict(raw_item)
+            finding_number = item_index + 1
             item["document_id"] = item.get("document_id") or document_id
             item["source"] = FindingSource.GEMINI
-            item["finding_id"] = item.get("finding_id") or f"FND-AI-{index:04d}"
+            item["finding_id"] = (
+                item.get("finding_id") or f"FND-AI-{finding_number:04d}"
+            )
             item["decision"] = self._normalize_decision(item.get("decision"))
+            canonicalization = canonicalize_category(
+                item.get("category"),
+                item.get("rule_ids") or (),
+            )
+            item["category"] = canonicalization.canonical_category
+            category_audit.append(
+                {
+                    "phase": phase,
+                    "finding_id": item["finding_id"],
+                    **canonicalization.as_dict(),
+                }
+            )
             # Models sometimes invent validation_status values; reset to pending.
             vs = str(item.get("validation_status") or "pending").strip().lower()
             if vs not in {s.value for s in ValidationStatus}:
@@ -200,7 +327,42 @@ class GeminiEditorialAIClient:
             try:
                 findings.append(Finding.model_validate(item))
             except Exception as exc:  # noqa: BLE001
-                logger.warning("Skipping invalid Gemini finding: %s (%s)", exc, item)
+                safe_reason = _safe_validation_reason(exc)
+                rejected_items.append(
+                    {
+                        "index": item_index,
+                        "failure_type": "schema_validation_error",
+                        "safe_reason": safe_reason,
+                    }
+                )
+                logger.warning(
+                    "Skipping invalid Gemini finding at index %s: %s",
+                    item_index,
+                    safe_reason,
+                )
+        diagnostic = {
+            "phase": phase,
+            "status": "partial" if rejected_items else "ok",
+            "failure_type": (
+                "item_validation_error" if rejected_items else None
+            ),
+            "safe_reason": (
+                "one_or_more_items_rejected" if rejected_items else "parsed"
+            ),
+            "envelope_type": envelope_type,
+            "valid_item_count": len(findings),
+            "rejected_item_count": len(rejected_items),
+            "rejected_item_indexes": [
+                item["index"] for item in rejected_items
+            ],
+            "rejected_items": rejected_items,
+            "fallback_used": False,
+            "fallback_type": None,
+        }
+        self._record_parse_diagnostic(diagnostic)
+        self.last_category_canonicalization = category_audit
+        if self.last_call_trace is not None:
+            self.last_call_trace["category_canonicalization"] = category_audit
         return findings
 
     def _client(self):
@@ -297,10 +459,26 @@ class GeminiEditorialAIClient:
             from google import genai  # noqa: F401
         except Exception as exc:  # noqa: BLE001
             logger.warning("Gemini SDK unavailable: %s", exc)
-            return self._fallback_finding(document_id, segments, "sdk_unavailable")
+            self.last_call_trace = None
+            self._record_phase_failure(
+                phase="discover",
+                failure_type="sdk_unavailable",
+                safe_reason="gemini_sdk_unavailable",
+                fallback_used=False,
+                fallback_type=None,
+            )
+            return []
 
         if not self._has_credentials():
-            return self._fallback_finding(document_id, segments, "missing_credentials")
+            self.last_call_trace = None
+            self._record_phase_failure(
+                phase="discover",
+                failure_type="credentials_unavailable",
+                safe_reason="gemini_credentials_unavailable",
+                fallback_used=False,
+                fallback_type=None,
+            )
+            return []
 
         prompt = self._user_payload(
             document_id=document_id,
@@ -313,11 +491,20 @@ class GeminiEditorialAIClient:
         try:
             raw_text = self._generate(system=self._system_prompt(), user=prompt)
             self.last_latency_ms = (time.perf_counter() - started) * 1000
-            return self._parse_findings(raw_text, document_id)
+            return self._parse_findings(raw_text, document_id, phase="discover")
         except Exception as exc:  # noqa: BLE001
             logger.warning("Gemini discover failed: %s", str(exc)[:240])
             self.last_latency_ms = (time.perf_counter() - started) * 1000
-            return self._fallback_finding(document_id, segments, str(exc)[:180])
+            if not isinstance(exc, GeminiResponseParseError):
+                self.last_call_trace = None
+                self._record_phase_failure(
+                    phase="discover",
+                    failure_type="model_call_error",
+                    safe_reason=f"model_call_failed:{type(exc).__name__}",
+                    fallback_used=False,
+                    fallback_type=None,
+                )
+            return []
 
     def _heuristic_judge(self, candidates: list[Finding]) -> list[Finding]:
         judged: list[Finding] = []
@@ -369,6 +556,13 @@ class GeminiEditorialAIClient:
                     ensure_ascii=False,
                 ),
             }
+            self._record_phase_failure(
+                phase="judge",
+                failure_type="credentials_unavailable",
+                safe_reason="gemini_credentials_unavailable",
+                fallback_used=True,
+                fallback_type="heuristic_judge",
+            )
             return judged
         try:
             from google import genai  # noqa: F401
@@ -382,6 +576,13 @@ class GeminiEditorialAIClient:
                     ensure_ascii=False,
                 ),
             }
+            self._record_phase_failure(
+                phase="judge",
+                failure_type="sdk_unavailable",
+                safe_reason="gemini_sdk_unavailable",
+                fallback_used=True,
+                fallback_type="heuristic_judge",
+            )
             return judged
 
         document_id = candidates[0].document_id
@@ -405,10 +606,28 @@ class GeminiEditorialAIClient:
         )
         try:
             raw = self._generate(system=self._phase_prompt("judge"), user=user)
-            parsed = self._parse_findings(raw, document_id)
-            return parsed or self._heuristic_judge(candidates)
+            parsed = self._parse_findings(raw, document_id, phase="judge")
+            if (
+                parsed
+                or self.last_parse_diagnostic
+                and self.last_parse_diagnostic["status"] == "ok"
+            ):
+                return parsed
+            self._mark_parse_fallback("heuristic_judge")
+            return self._heuristic_judge(candidates)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Gemini judge failed: %s", str(exc)[:200])
+            if not isinstance(exc, GeminiResponseParseError):
+                self.last_call_trace = None
+                self._record_phase_failure(
+                    phase="judge",
+                    failure_type="model_call_error",
+                    safe_reason=f"model_call_failed:{type(exc).__name__}",
+                    fallback_used=True,
+                    fallback_type="heuristic_judge",
+                )
+            else:
+                self._mark_parse_fallback("heuristic_judge")
             return self._heuristic_judge(candidates)
 
     async def repair_findings(
@@ -421,11 +640,29 @@ class GeminiEditorialAIClient:
         if not findings:
             return []
         if not self._has_credentials():
-            return self._local_repair(findings, segments, validation_errors)
+            repaired = self._local_repair(findings, segments, validation_errors)
+            self.last_call_trace = None
+            self._record_phase_failure(
+                phase="repair",
+                failure_type="credentials_unavailable",
+                safe_reason="gemini_credentials_unavailable",
+                fallback_used=True,
+                fallback_type="local_repair",
+            )
+            return repaired
         try:
             from google import genai  # noqa: F401
         except Exception:
-            return self._local_repair(findings, segments, validation_errors)
+            repaired = self._local_repair(findings, segments, validation_errors)
+            self.last_call_trace = None
+            self._record_phase_failure(
+                phase="repair",
+                failure_type="sdk_unavailable",
+                safe_reason="gemini_sdk_unavailable",
+                fallback_used=True,
+                fallback_type="local_repair",
+            )
+            return repaired
 
         document_id = findings[0].document_id
         payload = {
@@ -447,9 +684,32 @@ class GeminiEditorialAIClient:
                 system=self._phase_prompt("repair"),
                 user=json.dumps(payload, ensure_ascii=False),
             )
-            return self._parse_findings(raw, document_id)
+            parsed = self._parse_findings(raw, document_id, phase="repair")
+            if (
+                not parsed
+                and self.last_parse_diagnostic
+                and self.last_parse_diagnostic["rejected_item_count"] > 0
+            ):
+                self._mark_parse_fallback("local_repair")
+                return self._local_repair(
+                    findings,
+                    segments,
+                    validation_errors,
+                )
+            return parsed
         except Exception as exc:  # noqa: BLE001
             logger.warning("Gemini repair failed: %s", str(exc)[:200])
+            if not isinstance(exc, GeminiResponseParseError):
+                self.last_call_trace = None
+                self._record_phase_failure(
+                    phase="repair",
+                    failure_type="model_call_error",
+                    safe_reason=f"model_call_failed:{type(exc).__name__}",
+                    fallback_used=True,
+                    fallback_type="local_repair",
+                )
+            else:
+                self._mark_parse_fallback("local_repair")
             return self._local_repair(findings, segments, validation_errors)
 
     def _local_repair(
@@ -500,8 +760,7 @@ class GeminiEditorialAIClient:
         )
         try:
             raw = self._generate(system=self._phase_prompt("rule_author"), user=user)
-            data = json.loads(raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```"))
-            items = data.get("rules", data if isinstance(data, list) else [])
+            items, _ = _decode_array_envelope(raw, field="rules")
             rules: list[EditorialRule] = []
             for item in items:
                 try:

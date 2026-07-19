@@ -1,8 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useStore } from "@/lib/store";
+import { requireAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/audit")({
+  beforeLoad: () => {
+    requireAuth();
+  },
   component: AuditPage,
   head: () => ({ meta: [{ title: "سجل التدقيق" }] }),
 });

@@ -28,6 +28,11 @@ from app.models.schemas import (
 )
 from app.parsing.document import parse_document_text
 from app.postprocess.adjudicator import adjudicate_findings
+from app.postprocess.editorial_gate import (
+    POLICY_RUN5B,
+    gate_editorial_findings,
+    normalize_editorial_gate_policy,
+)
 from app.postprocess.gemini_gate import gate_gemini_findings, segments_for_gemini
 from app.postprocess.punctuation_gate import gate_punctuation_findings
 from app.postprocess.punctuation_policy import normalize_policy
@@ -311,6 +316,10 @@ class ReviewOrchestrator:
             output_summary={
                 "candidate_count": len(ai_candidates),
                 "finding_ids": [f.finding_id for f in ai_candidates],
+                "category_canonicalization": trace.get(
+                    "category_canonicalization", []
+                ),
+                "parser_diagnostic": trace.get("parser_diagnostic"),
             },
         )
 
@@ -350,6 +359,10 @@ class ReviewOrchestrator:
             output_summary={
                 "judged_count": len(ai_judged),
                 "decisions": [f.decision.value for f in ai_judged],
+                "category_canonicalization": trace.get(
+                    "category_canonicalization", []
+                ),
+                "parser_diagnostic": trace.get("parser_diagnostic"),
             },
         )
 
@@ -421,8 +434,83 @@ class ReviewOrchestrator:
         )
         ai_gated = [*ai_gated, *ai_suppressed]
 
+        t5c = _now()
+        editorial_policy = normalize_editorial_gate_policy(settings.editorial_gate_policy)
+        # Run5 is frozen AI-only behavior. Run5b sees the merged stream so R2 can
+        # evaluate mechanical generic-clarity findings.
+        editorial_input = (
+            dedupe_findings([*prior_findings, *ai_kept])
+            if editorial_policy == POLICY_RUN5B
+            else ai_kept
+        )
+        editorial_kept, editorial_suppressed, editorial_audit = gate_editorial_findings(
+            editorial_input,
+            policy=editorial_policy,
+            context=article_context,
+            segments=segments,
+        )
+        self._log_step(
+            review_id=review_id,
+            pipeline_log=pipeline_log,
+            step_id="editorial_gate",
+            label=f"Editorial precision gate ({editorial_policy})",
+            kind="gate",
+            started_at=t5c,
+            context={
+                "policy": editorial_policy,
+                "rules": ["R1", "R2", "R4"],
+                "input_scope": "mechanical_and_ai"
+                if editorial_policy == POLICY_RUN5B
+                else "ai_only",
+            },
+            output_summary={
+                "kept": len(editorial_kept),
+                "suppressed": len(editorial_suppressed),
+                "reason_counts": dict(
+                    Counter(
+                        event.get("reason_code")
+                        for event in editorial_audit
+                        if event.get("reason_code")
+                        and (
+                            event.get("decision") == "suppress"
+                            or event.get("action") == "suppress"
+                        )
+                    )
+                ),
+                "decision_counts": dict(
+                    Counter(
+                        event.get("decision") or event.get("action")
+                        for event in editorial_audit
+                    )
+                ),
+                "diagnostics": editorial_audit,
+                "suppressed_examples": [
+                    event
+                    for event in editorial_audit
+                    if event.get("decision") == "suppress"
+                    or event.get("action") == "suppress"
+                ][:8],
+            },
+        )
+        stages.append(
+            ReviewStage(
+                stage_id="editorial_gate",
+                label_ar="بوابة الدقة التحريرية",
+                summary={
+                    "policy": editorial_policy,
+                    "kept": len(editorial_kept),
+                    "suppressed": len(editorial_suppressed),
+                },
+            )
+        )
+        ai_gated = [*ai_gated, *editorial_suppressed]
+
         t6 = _now()
-        all_findings = dedupe_findings([*prior_findings, *ai_kept])
+        all_findings = (
+            editorial_kept
+            if editorial_policy == POLICY_RUN5B
+            else dedupe_findings([*prior_findings, *editorial_kept])
+        )
         punct_kept, punct_suppressed, punct_audit = gate_punctuation_findings(
             all_findings,
             policy=normalize_policy(settings.punctuation_policy),
@@ -458,9 +546,12 @@ class ReviewOrchestrator:
                 },
             )
         )
-        valid, rejected = self.validator.validate(
-            punct_kept, segments, document.document_id
+        valid, rejected, first_validation_diagnostics = (
+            self.validator.validate_with_diagnostics(
+                punct_kept, segments, document.document_id
+            )
         )
+        second_validation_diagnostics: list[dict[str, Any]] = []
         validator_rejected = list(rejected)
 
         if validator_rejected:
@@ -492,10 +583,26 @@ class ReviewOrchestrator:
                     user_payload=trace.get("user_payload"),
                     raw_response=trace.get("raw_response"),
                     context={"validation_errors": error_map},
-                    output_summary={"repaired_returned": len(repaired)},
+                    output_summary={
+                        "repaired_returned": len(repaired),
+                        "repaired_ids": [finding.finding_id for finding in repaired],
+                        "repaired_findings": [
+                            finding.model_dump(mode="json") for finding in repaired
+                        ],
+                        "category_canonicalization": trace.get(
+                            "category_canonicalization", []
+                        ),
+                        "parser_diagnostic": trace.get("parser_diagnostic"),
+                    },
                 )
-                repaired_valid, repaired_rejected = self.validator.validate(
-                    repaired, segments, document.document_id
+                (
+                    repaired_valid,
+                    repaired_rejected,
+                    second_validation_diagnostics,
+                ) = self.validator.validate_with_diagnostics(
+                    repaired,
+                    segments,
+                    document.document_id,
                 )
                 repaired_ids = {f.finding_id for f in repaired}
                 still_unrepaired = [
@@ -545,7 +652,7 @@ class ReviewOrchestrator:
             label="Schema validator (non-LLM)",
             kind="validate",
             started_at=t6,
-            context={"input_from": "punctuation_gate (+ repair if any)"},
+            context={"input_from": "editorial_gate -> punctuation_gate (+ repair if any)"},
             output_summary={
                 "valid": len(valid),
                 "rejected": len(rejected),
@@ -553,6 +660,10 @@ class ReviewOrchestrator:
                 "rejected_errors": {
                     f.finding_id: f.validation_errors for f in rejected if f.validation_errors
                 },
+                # Admin-only audit details. Public ReviewStage summaries retain
+                # counts and a small error sample, not full finding payloads.
+                "first_pass": first_validation_diagnostics,
+                "second_pass": second_validation_diagnostics,
             },
         )
 
@@ -576,6 +687,9 @@ class ReviewOrchestrator:
             output_summary={
                 "findings": [f.model_dump(mode="json") for f in valid],
                 "rejected_count": len(rejected),
+                "rejected_findings": [
+                    f.model_dump(mode="json") for f in rejected
+                ],
             },
         )
 

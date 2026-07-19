@@ -57,4 +57,5 @@ Do **not** overwrite `data/evaluation/runs/gemini_run3/`.
 
 1. Label the 163 editorial findings — see [EDITORIAL_LABELING.md](EDITORIAL_LABELING.md)
 2. Score: `python scripts/score_editorial_labels.py --input <labeled.jsonl>`
-3. Next gated run name: **`gemini_run5_editorial_gates`** (do not reuse run4)
+3. Gated run name: **`gemini_run5_editorial_gates`** (do not reuse run4)
+4. Keep `PUNCTUATION_POLICY=off` and set `EDITORIAL_GATE_POLICY=run5` for R1/R2/R4 only

@@ -101,6 +101,87 @@ def test_score_precision_excludes_uncertain(tmp_path: Path):
     assert (out / "labeled_findings.csv").exists()
 
 
+def test_expert_label_artifact_complete_when_present():
+    """If the expert pass has been run, all 163 rows must be decided."""
+    path = ROOT / "data" / "evaluation" / "analysis" / "editorial_labels_run3" / "expert_labels.jsonl"
+    if not path.exists():
+        return
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(rows) == 163
+    allowed = {"keep", "drop", "uncertain"}
+    assert all(str(r.get("decision") or "").strip().lower() in allowed for r in rows)
+    assert all(r["decision"] != "drop" or r.get("drop_reason") for r in rows)
+    assert all((r.get("rationale") or r.get("editor_notes")) for r in rows)
+
+
+def test_calibration_packet_selection_is_deterministic():
+    labels = ROOT / "data" / "evaluation" / "analysis" / "editorial_labels_run3" / "expert_labels.jsonl"
+    if not labels.exists():
+        return
+    mod = _load(
+        "build_calibration",
+        ROOT / "scripts" / "build_editorial_calibration_packet.py",
+    )
+    rows = mod.load_rows(labels)
+    first = mod.select_rows(rows)
+    second = mod.select_rows(rows)
+    assert [row["source_index"] for row in first] == [row["source_index"] for row in second]
+    assert len(first) == 30
+    assert sum(row["decision"] == "keep" for row in first) == 10
+    assert sum(row["decision"] == "drop" for row in first) == 15
+    assert sum(row["decision"] == "uncertain" for row in first) == 5
+    categories = {row["category"] for row in first}
+    assert {
+        "attribution",
+        "clarity",
+        "headline_body_mismatch",
+        "numeric_contradiction",
+        "loaded_framing",
+        "spelling",
+        "entity_name",
+    } <= categories
+
+
+def test_consistency_audit_artifacts_when_present():
+    base = ROOT / "data" / "evaluation" / "analysis" / "editorial_labels_run3"
+    audit = base / "label_consistency_audit.md"
+    corrections = base / "proposed_label_corrections.jsonl"
+    if not audit.exists() or not corrections.exists():
+        return
+    text = audit.read_text(encoding="utf-8")
+    assert "163" in text
+    rows = [json.loads(line) for line in corrections.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert rows
+    assert all(row.get("status") == "proposed_only_not_applied" for row in rows)
+
+
+def test_correction_adjudication_is_derived_and_complete():
+    base = ROOT / "data" / "evaluation" / "analysis" / "editorial_labels_run3"
+    proposals = base / "proposed_label_corrections.jsonl"
+    expert = base / "expert_labels.jsonl"
+    scoring = base / "labeled_for_scoring.jsonl"
+    if not all(path.exists() for path in (proposals, expert, scoring)):
+        return
+    mod = _load(
+        "adjudicate_corrections",
+        ROOT / "scripts" / "adjudicate_editorial_corrections.py",
+    )
+    records, final_expert, final_scoring = mod.adjudicate(
+        mod._read_jsonl(proposals),
+        mod._read_jsonl(expert),
+        mod._read_jsonl(scoring),
+    )
+    assert len(records) == 17
+    assert sum(row["adjudication"] == "accept" for row in records) == 13
+    assert sum(row["adjudication"] == "uncertain" for row in records) == 4
+    assert sum(row["adjudication"] == "reject" for row in records) == 0
+    assert len(final_expert) == len(final_scoring) == 163
+    decisions = {row["source_index"]: row["decision"] for row in final_expert}
+    assert decisions[128] == decisions[129] == "drop"
+    assert decisions[47] == decisions[49] == "uncertain"
+    assert decisions[50] == "keep"  # uncertain adjudication retains original
+
+
 def test_compare_requires_candidate(tmp_path: Path):
     mod = _load("compare_runs", ROOT / "scripts" / "compare_evaluation_runs.py")
     base = ROOT / "data" / "evaluation" / "runs" / "gemini_run3"

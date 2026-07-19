@@ -6,9 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { addArticle, useStore, getApiKey } from "@/lib/store";
+import { requireAuth } from "@/lib/auth";
 import type { Article, ArticleSection } from "@/lib/types";
 
 export const Route = createFileRoute("/new-article")({
+  beforeLoad: () => {
+    requireAuth();
+  },
   head: () => ({ meta: [{ title: "مقال جديد — Editorial Lab" }] }),
   component: NewArticlePage,
 });
@@ -64,14 +68,17 @@ function NewArticlePage() {
       sections: clean,
     };
     addArticle(article);
-    if (autorun) {
-      navigate({ to: "/review/$articleId/phases", params: { articleId: id }, search: { autorun: 1 } });
-    } else {
-      navigate({ to: "/review/$articleId", params: { articleId: id } });
-    }
+    navigate({
+      to: "/review/$articleId",
+      params: { articleId: id },
+      search: autorun ? { autorun: 1 } : {},
+    });
   }
 
   const hasKey = !!getApiKey();
+  const useMvp = useStore((s) => s.liveSettings.useMvpEngine !== false);
+  // Live MVP uses server-side Gemini; client API key only needed for non-MVP live path.
+  const canAutorun = mode === "demo" || useMvp || hasKey;
 
   return (
     <AppShell>
@@ -79,12 +86,16 @@ function NewArticlePage() {
         <div>
           <h1 className="text-2xl font-bold">مقال جديد</h1>
           <p className="text-xs text-muted-foreground">
-            ألصق نصاً عربياً أو اكتب الأقسام يدوياً، ثم شغّل المراحل (Demo أو Live LLM عبر مفتاحك).
+            ألصق نصاً عربياً أو اكتب الأقسام يدوياً، ثم احفظ وحلّل (Demo أو Live عبر محرك MVP).
           </p>
         </div>
         <div className="flex gap-2">
           <Badge variant={mode === "live" ? "destructive" : "secondary"}>{mode}</Badge>
-          <Badge variant={hasKey ? "default" : "outline"}>{hasKey ? "API key set" : "no API key"}</Badge>
+          {useMvp ? (
+            <Badge variant="default">MVP engine</Badge>
+          ) : (
+            <Badge variant={hasKey ? "default" : "outline"}>{hasKey ? "API key set" : "no API key"}</Badge>
+          )}
         </div>
       </div>
 
@@ -138,12 +149,12 @@ function NewArticlePage() {
       </section>
 
       <section className="flex gap-2 flex-wrap">
-        <Button onClick={() => submit(true)} disabled={mode === "live" && !hasKey}>
-          احفظ وشغّل المراحل {mode === "live" ? "(Live)" : "(Demo)"}
+        <Button onClick={() => submit(true)} disabled={!canAutorun}>
+          احفظ وحلّل {mode === "live" ? "(Live)" : "(Demo)"}
         </Button>
         <Button variant="outline" onClick={() => submit(false)}>احفظ فقط</Button>
-        {mode === "live" && !hasKey && (
-          <span className="text-xs text-red-600 self-center">أضف مفتاح API في الإعدادات لتشغيل Live.</span>
+        {mode === "live" && !useMvp && !hasKey && (
+          <span className="text-xs text-red-600 self-center">أضف مفتاح API في الإعدادات لتشغيل Live بدون MVP.</span>
         )}
       </section>
     </AppShell>

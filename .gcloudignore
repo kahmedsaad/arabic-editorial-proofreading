@@ -15,6 +15,9 @@ frontend/.output/
 benchmark_v2/results/
 benchmark_v2/private/gold/
 data/app.db
+# Large evaluation/training datasets not needed by the serving API image
+data/local/
+data/cache/
 *.egg-info/
 .coverage
 htmlcov/

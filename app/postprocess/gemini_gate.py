@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from app.category_canonicalization import canonicalize_category
 from app.models.schemas import Decision, Finding, FindingSource, Segment, Severity
 
 _QUOTE_CHARS = "«»\"“”‘’'"
@@ -55,17 +56,8 @@ _MEDIUM_RISK = {
     "cross_paragraph_contradiction",
 }
 
-_CATEGORY_NORMALIZE = {
-    "consistency": "claim_contradiction",
-    "numbers": "numeric_contradiction",
-    "date": "temporal_contradiction",
-    "name": "entity_confusion",
-}
-
-
-def normalize_category(category: str) -> str:
-    key = (category or "").strip().lower()
-    return _CATEGORY_NORMALIZE.get(key, category)
+def normalize_category(category: str, rule_ids: list[str] | None = None) -> str:
+    return canonicalize_category(category, rule_ids or ()).canonical_category
 
 
 def _inside_quotes(text: str, start: int, end: int) -> bool:
@@ -153,7 +145,7 @@ def validate_gemini_finding(
     if finding.source != FindingSource.GEMINI:
         return True, "not_gemini"
 
-    finding.category = normalize_category(finding.category)
+    finding.category = normalize_category(finding.category, finding.rule_ids)
 
     span = (finding.original_text or "").strip()
     if not span:

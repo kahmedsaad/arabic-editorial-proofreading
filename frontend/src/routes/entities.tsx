@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getState } from "@/lib/store";
+import { requireAuth } from "@/lib/auth";
 import { bulkEntities, listEntities, upsertEntity, type MvpEntity } from "@/lib/api/mvp";
 
 export const Route = createFileRoute("/entities")({
+  beforeLoad: () => {
+    requireAuth();
+  },
   component: EntitiesPage,
   head: () => ({ meta: [{ title: "مستودع الكيانات" }] }),
 });

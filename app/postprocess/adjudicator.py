@@ -118,7 +118,7 @@ def adjudicate_finding(
 ) -> Finding:
     """Return finding with adjudication_verdict set; SUPPRESS* should not interrupt editors."""
     finding = finding.model_copy(
-        update={"category": normalize_category(finding.category)}
+        update={"category": normalize_category(finding.category, finding.rule_ids)}
     )
     segment = segments_by_id.get(finding.segment_id)
     span = (finding.original_text or "").strip()

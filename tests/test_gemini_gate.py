@@ -39,7 +39,8 @@ def _finding(**kwargs) -> Finding:
 
 
 def test_normalize_category():
-    assert normalize_category("consistency") == "claim_contradiction"
+    assert normalize_category("consistency", ["CONS-CLAIM"]) == "claim_contradiction"
+    assert normalize_category("consistency") == "consistency"
 
 
 def test_gate_drops_low_confidence():

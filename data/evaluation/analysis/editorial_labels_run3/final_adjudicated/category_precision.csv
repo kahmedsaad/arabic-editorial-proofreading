@@ -1,0 +1,12 @@
+category,findings,keep,drop,uncertain,precision,drop_rate_excluding_uncertain,drop_rate_among_labeled,main_drop_reason
+Attribution,40,0,40,0,0.0,1.0,1.0,too_low_impact
+Clarity,34,0,34,0,0.0,1.0,1.0,too_low_impact
+Headline mismatch,23,7,13,3,0.35,0.65,0.5652,headline_compression
+Entity consistency,17,0,15,2,0.0,1.0,0.8824,optional_style
+Loaded framing,14,0,14,0,0.0,1.0,1.0,incorrect_rule
+Numeric consistency,14,3,2,9,0.6,0.4,0.1429,context_resolves_issue
+spelling,13,3,10,0,0.2308,0.7692,0.7692,optional_style
+unsupported_certainty,3,1,2,0,0.3333,0.6667,0.6667,headline_compression
+repetition,3,2,1,0,0.6667,0.3333,0.3333,optional_style
+consistency,1,1,0,0,1.0,0.0,0.0,
+grammar,1,1,0,0,1.0,0.0,0.0,

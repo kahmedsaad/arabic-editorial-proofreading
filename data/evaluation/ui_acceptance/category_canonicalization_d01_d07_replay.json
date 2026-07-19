@@ -1,0 +1,2248 @@
+[
+  {
+    "case_id": "D01",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D01",
+        "zone": "headline",
+        "text": "ارتفاع المبيعات",
+        "normalized_text": "ارتفاع المبيعات",
+        "start_offset": 0,
+        "end_offset": 15,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D01",
+        "zone": "body",
+        "text": "ارتفعت مبيعات الشركة من 10 ملايين ريال إلى 12 مليون ريال خلال عام واحد، وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "normalized_text": "ارتفعت مبيعات الشركة من 10 ملايين ريال الي 12 مليون ريال خلال عام واحد, وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "start_offset": 0,
+        "end_offset": 108,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D01",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "replace",
+            "severity": "high",
+            "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+            "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+            "start_offset": 70,
+            "end_offset": 108,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+            "confidence": 1.0,
+            "requires_editor_review": false,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D01",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "replace",
+            "severity": "high",
+            "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+            "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+            "start_offset": 70,
+            "end_offset": 108,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [
+            {
+              "finding_id": "FND-AI-001",
+              "offset_realign_ran": false,
+              "before_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D01",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "replace",
+                "severity": "high",
+                "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+                "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+                "start_offset": 72,
+                "end_offset": 108,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "after_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D01",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "replace",
+                "severity": "high",
+                "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+                "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+                "start_offset": 72,
+                "end_offset": 108,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "validation_errors": [],
+              "outcome": "valid"
+            }
+          ],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-001",
+              "document_id": "UI-D01",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "replace",
+              "severity": "high",
+              "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+              "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+              "start_offset": 72,
+              "end_offset": 108,
+              "rule_ids": [
+                "CONS-CLAIM",
+                "CONS-NUMBER"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 0,
+          "rejected_findings": []
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-001",
+        "document_id": "UI-D01",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "replace",
+        "severity": "high",
+        "original_text": "وهو ما يمثل تراجعا قدره مليونا ريال.",
+        "suggested_text": "وهو ما يمثل ارتفاعا قدره مليونا ريال.",
+        "start_offset": 72,
+        "end_offset": 108,
+        "rule_ids": [
+          "CONS-CLAIM",
+          "CONS-NUMBER"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "الجملة تشير إلى ارتفاع المبيعات من 10 ملايين إلى 12 مليون ريال، لكنها تصف الفرق بأنه 'تراجع'. هذا تناقض مباشر مع الأرقام المذكورة ومع الجزء الأول من الجملة الذي يوضح الزيادة.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": []
+  },
+  {
+    "case_id": "D02",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D02",
+        "zone": "headline",
+        "text": "نتائج الاستطلاع",
+        "normalized_text": "نتائج الاستطلاع",
+        "start_offset": 0,
+        "end_offset": 15,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D02",
+        "zone": "body",
+        "text": "أيد 62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+        "normalized_text": "ايد 62 بالمئة من المشاركين الاقتراح, بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رايا. وبذلك شملت النتائج جميع المشاركين.",
+        "start_offset": 0,
+        "end_offset": 117,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D02",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+            "suggested_text": null,
+            "start_offset": 4,
+            "end_offset": 117,
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D02",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+            "suggested_text": null,
+            "start_offset": 4,
+            "end_offset": 117,
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "opinion"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [
+            {
+              "finding_id": "FND-AI-001",
+              "offset_realign_ran": false,
+              "before_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D02",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+                "suggested_text": null,
+                "start_offset": 4,
+                "end_offset": 117,
+                "rule_ids": [
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "after_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D02",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+                "suggested_text": null,
+                "start_offset": 4,
+                "end_offset": 117,
+                "rule_ids": [
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "validation_errors": [],
+              "outcome": "valid"
+            }
+          ],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-001",
+              "document_id": "UI-D02",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "hard_warning",
+              "severity": "high",
+              "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+              "suggested_text": null,
+              "start_offset": 4,
+              "end_offset": 117,
+              "rule_ids": [
+                "CONS-NUMBER"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 0,
+          "rejected_findings": []
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-001",
+        "document_id": "UI-D02",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "hard_warning",
+        "severity": "high",
+        "original_text": "62 بالمئة من المشاركين الاقتراح، بينما عارضه 28 بالمئة ولم يبد 15 بالمئة رأيا. وبذلك شملت النتائج جميع المشاركين.",
+        "suggested_text": null,
+        "start_offset": 4,
+        "end_offset": 117,
+        "rule_ids": [
+          "CONS-NUMBER"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "مجموع النسب المئوية المذكورة (62% + 28% + 15%) يساوي 105%، وهو ما يتجاوز 100%. هذا يتناقض مع الجملة اللاحقة التي تفيد بأن النتائج شملت جميع المشاركين، مما يشير إلى وجود خطأ عددي.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": []
+  },
+  {
+    "case_id": "D03",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D03",
+        "zone": "headline",
+        "text": "انخفاض استهلاك المياه",
+        "normalized_text": "انخفاض استهلاك المياه",
+        "start_offset": 0,
+        "end_offset": 21,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D03",
+        "zone": "body",
+        "text": "انخفض متوسط الاستهلاك اليومي من 500 ألف لتر إلى 425 ألف لتر، أي بنسبة 25 بالمئة.",
+        "normalized_text": "انخفض متوسط الاستهلاك اليومي من 500 الف لتر الي 425 الف لتر, اي بنسبة 25 بالمئة.",
+        "start_offset": 0,
+        "end_offset": 80,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D03",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "replace",
+            "severity": "high",
+            "original_text": "25 بالمئة",
+            "suggested_text": "15 بالمئة",
+            "start_offset": 70,
+            "end_offset": 80,
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D03",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "replace",
+            "severity": "high",
+            "original_text": "25 بالمئة",
+            "suggested_text": "15 بالمئة",
+            "start_offset": 70,
+            "end_offset": 80,
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [
+            {
+              "finding_id": "FND-AI-001",
+              "offset_realign_ran": false,
+              "before_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D03",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "replace",
+                "severity": "high",
+                "original_text": "25 بالمئة",
+                "suggested_text": "15 بالمئة",
+                "start_offset": 70,
+                "end_offset": 79,
+                "rule_ids": [
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "after_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D03",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "replace",
+                "severity": "high",
+                "original_text": "25 بالمئة",
+                "suggested_text": "15 بالمئة",
+                "start_offset": 70,
+                "end_offset": 79,
+                "rule_ids": [
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "validation_errors": [],
+              "outcome": "valid"
+            }
+          ],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-001",
+              "document_id": "UI-D03",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "replace",
+              "severity": "high",
+              "original_text": "25 بالمئة",
+              "suggested_text": "15 بالمئة",
+              "start_offset": 70,
+              "end_offset": 79,
+              "rule_ids": [
+                "CONS-NUMBER"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 0,
+          "rejected_findings": []
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-001",
+        "document_id": "UI-D03",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "replace",
+        "severity": "high",
+        "original_text": "25 بالمئة",
+        "suggested_text": "15 بالمئة",
+        "start_offset": 70,
+        "end_offset": 79,
+        "rule_ids": [
+          "CONS-NUMBER"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "النسبة المئوية المذكورة (25%) لا تتطابق مع الأرقام المقدمة (انخفاض من 500 ألف لتر إلى 425 ألف لتر). الانخفاض الفعلي هو 75 ألف لتر من أصل 500 ألف لتر، وهو ما يمثل 15% وليس 25%.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": []
+  },
+  {
+    "case_id": "D04",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D04",
+        "zone": "headline",
+        "text": "افتتاح ثلاثة مراكز جديدة",
+        "normalized_text": "افتتاح ثلاثة مراكز جديدة",
+        "start_offset": 0,
+        "end_offset": 24,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D04",
+        "zone": "body",
+        "text": "أعلنت المؤسسة افتتاح ثلاثة مراكز جديدة في الشمال. وأوضحت أن المركزين سيقدمان خدماتهما ابتداء من الشهر المقبل.",
+        "normalized_text": "اعلنت المؤسسة افتتاح ثلاثة مراكز جديدة في الشمال. واوضحت ان المركزين سيقدمان خدماتهما ابتداء من الشهر المقبل.",
+        "start_offset": 0,
+        "end_offset": 109,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D04",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "المركزين",
+            "suggested_text": null,
+            "start_offset": 58,
+            "end_offset": 65,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-0001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-0001",
+            "document_id": "UI-D04",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "المركزين",
+            "suggested_text": null,
+            "start_offset": 58,
+            "end_offset": 65,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-0001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-NUMBER"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 0,
+          "kept_ids": [
+            "FND-AI-0001"
+          ],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-0001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [
+            {
+              "finding_id": "FND-AI-0001",
+              "offset_realign_ran": false,
+              "before_realign": {
+                "finding_id": "FND-AI-0001",
+                "document_id": "UI-D04",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "المركزين",
+                "suggested_text": null,
+                "start_offset": 60,
+                "end_offset": 68,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "after_realign": {
+                "finding_id": "FND-AI-0001",
+                "document_id": "UI-D04",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "المركزين",
+                "suggested_text": null,
+                "start_offset": 60,
+                "end_offset": 68,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-NUMBER"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "validation_errors": [],
+              "outcome": "valid"
+            }
+          ],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-0001",
+              "document_id": "UI-D04",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "hard_warning",
+              "severity": "high",
+              "original_text": "المركزين",
+              "suggested_text": null,
+              "start_offset": 60,
+              "end_offset": 68,
+              "rule_ids": [
+                "CONS-CLAIM",
+                "CONS-NUMBER"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 0,
+          "rejected_findings": []
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-0001",
+        "document_id": "UI-D04",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "hard_warning",
+        "severity": "high",
+        "original_text": "المركزين",
+        "suggested_text": null,
+        "start_offset": 60,
+        "end_offset": 68,
+        "rule_ids": [
+          "CONS-CLAIM",
+          "CONS-NUMBER"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "يوجد تناقض عددي في النص. يذكر الجزء الأول من الجملة في نفس الفقرة وكذلك في العنوان 'ثلاثة مراكز جديدة'، بينما يشير هذا الجزء إلى 'المركزين'، مما يخلق تضارباً في عدد المراكز المفتتحة. يجب توحيد العدد.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": []
+  },
+  {
+    "case_id": "D05",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D05",
+        "zone": "headline",
+        "text": "فوز الفريق في النهائي",
+        "normalized_text": "فوز الفريق في النهائي",
+        "start_offset": 0,
+        "end_offset": 21,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D05",
+        "zone": "body",
+        "text": "خسر فريق المدينة المباراة النهائية بهدفين مقابل هدف، ليتوج بطلا للبطولة للمرة الثالثة.",
+        "normalized_text": "خسر فريق المدينة المباراة النهائية بهدفين مقابل هدف, ليتوج بطلا للبطولة للمرة الثالثة.",
+        "start_offset": 0,
+        "end_offset": 86,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-FALLBACK",
+            "document_id": "UI-D05",
+            "segment_id": "SEG-001",
+            "source": "gemini",
+            "category": "clarity",
+            "decision": "needs_editor_review",
+            "severity": "medium",
+            "original_text": "فوز الفريق ف",
+            "suggested_text": null,
+            "start_offset": 0,
+            "end_offset": 12,
+            "rule_ids": [],
+            "entity_ids": [],
+            "explanation_ar": "تعذر إكمال تحليل النموذج: 'list' object has no attribute 'get'",
+            "confidence": 0.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": null,
+            "rule_applicability": null,
+            "article_context_resolves_issue": null,
+            "would_interrupt_editor": null,
+            "quotation_status": null,
+            "publisher_voice": null,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": []
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-FALLBACK",
+            "document_id": "UI-D05",
+            "segment_id": "SEG-001",
+            "source": "gemini",
+            "category": "clarity",
+            "decision": "needs_editor_review",
+            "severity": "medium",
+            "original_text": "فوز الفريق ف",
+            "suggested_text": null,
+            "start_offset": 0,
+            "end_offset": 12,
+            "rule_ids": [],
+            "entity_ids": [],
+            "explanation_ar": "تعذر إكمال تحليل النموذج: 'list' object has no attribute 'get'",
+            "confidence": 0.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": null,
+            "rule_applicability": null,
+            "article_context_resolves_issue": null,
+            "would_interrupt_editor": null,
+            "quotation_status": null,
+            "publisher_voice": null,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-FALLBACK",
+            "raw_category": "clarity",
+            "normalized_category": "clarity",
+            "canonical_category": "clarity",
+            "rule_ids": [],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 0,
+          "gated": 1,
+          "kept_ids": [],
+          "gated_ids": [
+            "FND-AI-FALLBACK"
+          ]
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 0,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 0,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 0,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [],
+          "rejected_count": 1,
+          "rejected_findings": [
+            {
+              "finding_id": "FND-AI-FALLBACK",
+              "document_id": "UI-D05",
+              "segment_id": "SEG-001",
+              "source": "gemini",
+              "category": "clarity",
+              "decision": "needs_editor_review",
+              "severity": "medium",
+              "original_text": "فوز الفريق ف",
+              "suggested_text": null,
+              "start_offset": 0,
+              "end_offset": 12,
+              "rule_ids": [],
+              "entity_ids": [],
+              "explanation_ar": "تعذر إكمال تحليل النموذج: 'list' object has no attribute 'get'",
+              "confidence": 0.0,
+              "requires_editor_review": true,
+              "validation_status": "pending",
+              "validation_errors": [
+                "gemini_gate:confidence_below_0.85"
+              ],
+              "adjudication_verdict": null,
+              "editorial_harm_if_ignored": null,
+              "rule_applicability": null,
+              "article_context_resolves_issue": null,
+              "would_interrupt_editor": null,
+              "quotation_status": null,
+              "publisher_voice": null,
+              "punctuation_subtype": null
+            }
+          ]
+        }
+      }
+    ],
+    "findings": [],
+    "rejected_findings": [
+      {
+        "finding_id": "FND-AI-FALLBACK",
+        "document_id": "UI-D05",
+        "segment_id": "SEG-001",
+        "source": "gemini",
+        "category": "clarity",
+        "decision": "needs_editor_review",
+        "severity": "medium",
+        "original_text": "فوز الفريق ف",
+        "suggested_text": null,
+        "start_offset": 0,
+        "end_offset": 12,
+        "rule_ids": [],
+        "entity_ids": [],
+        "explanation_ar": "تعذر إكمال تحليل النموذج: 'list' object has no attribute 'get'",
+        "confidence": 0.0,
+        "requires_editor_review": true,
+        "validation_status": "pending",
+        "validation_errors": [
+          "gemini_gate:confidence_below_0.85"
+        ],
+        "adjudication_verdict": null,
+        "editorial_harm_if_ignored": null,
+        "rule_applicability": null,
+        "article_context_resolves_issue": null,
+        "would_interrupt_editor": null,
+        "quotation_status": null,
+        "publisher_voice": null,
+        "punctuation_subtype": null
+      }
+    ]
+  },
+  {
+    "case_id": "D06",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D06",
+        "zone": "headline",
+        "text": "بدء المشروع في سبتمبر",
+        "normalized_text": "بدء المشروع في سبتمبر",
+        "start_offset": 0,
+        "end_offset": 21,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D06",
+        "zone": "body",
+        "text": "أكدت الشركة أن تنفيذ المشروع سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو ولن تبدأ قبل الحصول على الموافقة النهائية.",
+        "normalized_text": "اكدت الشركة ان تنفيذ المشروع سيبدا في سبتمبر المقبل. واضافت ان الاعمال انطلقت فعليا في يوليو ولن تبدا قبل الحصول علي الموافقة النهائية.",
+        "start_offset": 0,
+        "end_offset": 135,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 24,
+            "end_offset": 98,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-DATE"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          },
+          {
+            "finding_id": "FND-AI-002",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "attribution_strength",
+            "decision": "soft_warning",
+            "severity": "medium",
+            "original_text": "أكدت الشركة",
+            "suggested_text": "قالت الشركة",
+            "start_offset": 0,
+            "end_offset": 11,
+            "rule_ids": [
+              "R_ATTR_CONFIRMATION"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يُستخدم فعل \"أكدت\" (confirmed) مع مصدر واحد (الشركة). وفقًا للقاعدة R_ATTR_CONFIRMATION، يُفضل استخدام فعل إسناد أضعف مثل \"قالت\" (said) لتجنب الإيحاء بمستوى عالٍ من اليقين أو التحقق المستقل عندما يكون هناك مصدر واحد فقط.",
+            "confidence": 0.9,
+            "requires_editor_review": false,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "low",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": false,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-DATE"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          },
+          {
+            "phase": "discover",
+            "finding_id": "FND-AI-002",
+            "raw_category": "attribution_strength",
+            "normalized_category": "attribution_strength",
+            "canonical_category": "attribution_strength",
+            "rule_ids": [
+              "R_ATTR_CONFIRMATION"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      },
+      {
+        "stage": "judgment",
+        "findings": [
+          {
+            "finding_id": "FND-AI-001",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "numeric_contradiction",
+            "decision": "hard_warning",
+            "severity": "high",
+            "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+            "suggested_text": null,
+            "start_offset": 24,
+            "end_offset": 98,
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-DATE"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+            "confidence": 1.0,
+            "requires_editor_review": true,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "high",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": true,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          },
+          {
+            "finding_id": "FND-AI-002",
+            "document_id": "UI-D06",
+            "segment_id": "SEG-002",
+            "source": "gemini",
+            "category": "attribution_strength",
+            "decision": "soft_warning",
+            "severity": "medium",
+            "original_text": "أكدت الشركة",
+            "suggested_text": "قالت الشركة",
+            "start_offset": 0,
+            "end_offset": 11,
+            "rule_ids": [
+              "R_ATTR_CONFIRMATION"
+            ],
+            "entity_ids": [],
+            "explanation_ar": "يُستخدم فعل \"أكدت\" (confirmed) مع مصدر واحد (الشركة). وفقًا للقاعدة R_ATTR_CONFIRMATION، يُفضل استخدام فعل إسناد أضعف مثل \"قالت\" (said) لتجنب الإيحاء بمستوى عالٍ من اليقين أو التحقق المستقل عندما يكون هناك مصدر واحد فقط.",
+            "confidence": 0.9,
+            "requires_editor_review": false,
+            "validation_status": "pending",
+            "validation_errors": [],
+            "adjudication_verdict": null,
+            "editorial_harm_if_ignored": "low",
+            "rule_applicability": "clear",
+            "article_context_resolves_issue": false,
+            "would_interrupt_editor": false,
+            "quotation_status": "not_quote",
+            "publisher_voice": true,
+            "punctuation_subtype": null
+          }
+        ],
+        "category_canonicalization": [
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-001",
+            "raw_category": "numeric_contradiction",
+            "normalized_category": "numeric_contradiction",
+            "canonical_category": "numeric_contradiction",
+            "rule_ids": [
+              "CONS-CLAIM",
+              "CONS-DATE"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          },
+          {
+            "phase": "judge",
+            "finding_id": "FND-AI-002",
+            "raw_category": "attribution_strength",
+            "normalized_category": "attribution_strength",
+            "canonical_category": "attribution_strength",
+            "rule_ids": [
+              "R_ATTR_CONFIRMATION"
+            ],
+            "mapping_occurred": false,
+            "alias_mapping_occurred": false,
+            "reason_code": "category_canonicalization:unchanged"
+          }
+        ]
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 1,
+          "gated": 1,
+          "kept_ids": [
+            "FND-AI-001"
+          ],
+          "gated_ids": [
+            "FND-AI-002"
+          ]
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [
+            "FND-AI-001"
+          ],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 1,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 1,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [
+            {
+              "finding_id": "FND-AI-001",
+              "offset_realign_ran": false,
+              "before_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D06",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+                "suggested_text": null,
+                "start_offset": 29,
+                "end_offset": 92,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-DATE"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "after_realign": {
+                "finding_id": "FND-AI-001",
+                "document_id": "UI-D06",
+                "segment_id": "SEG-002",
+                "source": "gemini",
+                "category": "numeric_contradiction",
+                "decision": "hard_warning",
+                "severity": "high",
+                "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+                "suggested_text": null,
+                "start_offset": 29,
+                "end_offset": 92,
+                "rule_ids": [
+                  "CONS-CLAIM",
+                  "CONS-DATE"
+                ],
+                "entity_ids": [],
+                "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+                "confidence": 1.0,
+                "requires_editor_review": true,
+                "validation_status": "pending",
+                "validation_errors": [],
+                "adjudication_verdict": "SHOW",
+                "editorial_harm_if_ignored": "high",
+                "rule_applicability": "clear",
+                "article_context_resolves_issue": false,
+                "would_interrupt_editor": true,
+                "quotation_status": "not_quote",
+                "publisher_voice": true,
+                "punctuation_subtype": null
+              },
+              "validation_errors": [],
+              "outcome": "valid"
+            }
+          ],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [
+            {
+              "finding_id": "FND-AI-001",
+              "document_id": "UI-D06",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "numeric_contradiction",
+              "decision": "hard_warning",
+              "severity": "high",
+              "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+              "suggested_text": null,
+              "start_offset": 29,
+              "end_offset": 92,
+              "rule_ids": [
+                "CONS-CLAIM",
+                "CONS-DATE"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+              "confidence": 1.0,
+              "requires_editor_review": true,
+              "validation_status": "valid",
+              "validation_errors": [],
+              "adjudication_verdict": "SHOW",
+              "editorial_harm_if_ignored": "high",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": true,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ],
+          "rejected_count": 1,
+          "rejected_findings": [
+            {
+              "finding_id": "FND-AI-002",
+              "document_id": "UI-D06",
+              "segment_id": "SEG-002",
+              "source": "gemini",
+              "category": "attribution_strength",
+              "decision": "soft_warning",
+              "severity": "medium",
+              "original_text": "أكدت الشركة",
+              "suggested_text": "قالت الشركة",
+              "start_offset": 0,
+              "end_offset": 11,
+              "rule_ids": [
+                "R_ATTR_CONFIRMATION"
+              ],
+              "entity_ids": [],
+              "explanation_ar": "يُستخدم فعل \"أكدت\" (confirmed) مع مصدر واحد (الشركة). وفقًا للقاعدة R_ATTR_CONFIRMATION، يُفضل استخدام فعل إسناد أضعف مثل \"قالت\" (said) لتجنب الإيحاء بمستوى عالٍ من اليقين أو التحقق المستقل عندما يكون هناك مصدر واحد فقط.",
+              "confidence": 0.9,
+              "requires_editor_review": false,
+              "validation_status": "pending",
+              "validation_errors": [
+                "gemini_gate:confidence_below_0.92"
+              ],
+              "adjudication_verdict": null,
+              "editorial_harm_if_ignored": "low",
+              "rule_applicability": "clear",
+              "article_context_resolves_issue": false,
+              "would_interrupt_editor": false,
+              "quotation_status": "not_quote",
+              "publisher_voice": true,
+              "punctuation_subtype": null
+            }
+          ]
+        }
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "FND-AI-001",
+        "document_id": "UI-D06",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "numeric_contradiction",
+        "decision": "hard_warning",
+        "severity": "high",
+        "original_text": "سيبدأ في سبتمبر المقبل. وأضافت أن الأعمال انطلقت فعليا في يوليو",
+        "suggested_text": null,
+        "start_offset": 29,
+        "end_offset": 92,
+        "rule_ids": [
+          "CONS-CLAIM",
+          "CONS-DATE"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "يحتوي نص المقال على معلومات متناقضة حول تاريخ بدء المشروع. يذكر أولاً أن المشروع \"سيبدأ في سبتمبر المقبل\"، ثم يضيف أن \"الأعمال انطلقت فعليا في يوليو\". هذا التناقض الداخلي يخلق غموضًا ويؤثر على دقة المعلومة الأساسية، كما يتعارض مع عنوان المقال الذي يشير إلى بدء المشروع في سبتمبر.",
+        "confidence": 1.0,
+        "requires_editor_review": true,
+        "validation_status": "valid",
+        "validation_errors": [],
+        "adjudication_verdict": "SHOW",
+        "editorial_harm_if_ignored": "high",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": true,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ],
+    "rejected_findings": [
+      {
+        "finding_id": "FND-AI-002",
+        "document_id": "UI-D06",
+        "segment_id": "SEG-002",
+        "source": "gemini",
+        "category": "attribution_strength",
+        "decision": "soft_warning",
+        "severity": "medium",
+        "original_text": "أكدت الشركة",
+        "suggested_text": "قالت الشركة",
+        "start_offset": 0,
+        "end_offset": 11,
+        "rule_ids": [
+          "R_ATTR_CONFIRMATION"
+        ],
+        "entity_ids": [],
+        "explanation_ar": "يُستخدم فعل \"أكدت\" (confirmed) مع مصدر واحد (الشركة). وفقًا للقاعدة R_ATTR_CONFIRMATION، يُفضل استخدام فعل إسناد أضعف مثل \"قالت\" (said) لتجنب الإيحاء بمستوى عالٍ من اليقين أو التحقق المستقل عندما يكون هناك مصدر واحد فقط.",
+        "confidence": 0.9,
+        "requires_editor_review": false,
+        "validation_status": "pending",
+        "validation_errors": [
+          "gemini_gate:confidence_below_0.92"
+        ],
+        "adjudication_verdict": null,
+        "editorial_harm_if_ignored": "low",
+        "rule_applicability": "clear",
+        "article_context_resolves_issue": false,
+        "would_interrupt_editor": false,
+        "quotation_status": "not_quote",
+        "publisher_voice": true,
+        "punctuation_subtype": null
+      }
+    ]
+  },
+  {
+    "case_id": "D07",
+    "segments": [
+      {
+        "segment_id": "SEG-001",
+        "document_id": "UI-D07",
+        "zone": "headline",
+        "text": "تحسن زمن الاستجابة",
+        "normalized_text": "تحسن زمن الاستجابة",
+        "start_offset": 0,
+        "end_offset": 18,
+        "sequence": 1
+      },
+      {
+        "segment_id": "SEG-002",
+        "document_id": "UI-D07",
+        "zone": "body",
+        "text": "انخفض متوسط زمن الاستجابة من 40 دقيقة إلى 30 دقيقة، بما يعادل تحسنا نسبته 25 بالمئة.",
+        "normalized_text": "انخفض متوسط زمن الاستجابة من 40 دقيقة الي 30 دقيقة, بما يعادل تحسنا نسبته 25 بالمئة.",
+        "start_offset": 0,
+        "end_offset": 84,
+        "sequence": 2
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "candidate_generation",
+        "findings": [],
+        "category_canonicalization": []
+      },
+      {
+        "stage": "judgment",
+        "findings": [],
+        "category_canonicalization": []
+      }
+    ],
+    "pipeline_steps": [
+      {
+        "step_id": "gate",
+        "context": {
+          "input_from": "judge"
+        },
+        "output_summary": {
+          "kept": 0,
+          "gated": 0,
+          "kept_ids": [],
+          "gated_ids": []
+        }
+      },
+      {
+        "step_id": "adjudicate",
+        "context": {
+          "article_type": "news_report"
+        },
+        "output_summary": {
+          "shown_ids": [],
+          "suppressed": []
+        }
+      },
+      {
+        "step_id": "editorial_gate",
+        "context": {
+          "policy": "off",
+          "rules": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "input_scope": "ai_only"
+        },
+        "output_summary": {
+          "kept": 0,
+          "suppressed": 0,
+          "reason_counts": {},
+          "decision_counts": {},
+          "diagnostics": [],
+          "suppressed_examples": []
+        }
+      },
+      {
+        "step_id": "punctuation_gate",
+        "context": {
+          "policy": "off"
+        },
+        "output_summary": {
+          "kept": 0,
+          "suppressed": 0,
+          "reason_counts": {}
+        }
+      },
+      {
+        "step_id": "validate",
+        "context": {
+          "input_from": "editorial_gate -> punctuation_gate (+ repair if any)"
+        },
+        "output_summary": {
+          "valid": 0,
+          "rejected": 0,
+          "punctuation_suppressed": 0,
+          "rejected_errors": {},
+          "first_pass": [],
+          "second_pass": []
+        }
+      },
+      {
+        "step_id": "final",
+        "context": {},
+        "output_summary": {
+          "findings": [],
+          "rejected_count": 0,
+          "rejected_findings": []
+        }
+      }
+    ],
+    "findings": [],
+    "rejected_findings": []
+  }
+]

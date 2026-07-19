@@ -1,11 +1,16 @@
 # Recommended next actions (evidence package)
 
 Status:
-- run4 no-punctuation ready: **False**
-- human labels scored: **False**
+- run4 no-punctuation ready: **True**
+- human labels scored: **True**
 
 Do **not** implement `gemini_run5_editorial_gates` until both are true.
 
-- Wait for `gemini_run4_no_punctuation` to finish, then re-run this script.
-- Label `data/local/sprint2/non_punctuation_priority_to_label.jsonl` (or the working copy).
-- Score with `python scripts/score_editorial_labels.py`.
+
+When both are ready, fill category rows from `human_label_summary.json`:
+
+| Category | Labeled | Keep rate | Drop rate | Top drop reasons | Example FPs | Recommended action | Recall risk | Regression tests |
+|----------|---------|-----------|-----------|------------------|-------------|--------------------|-------------|------------------|
+| Attribution | … | … | … | … | … | Pending evidence | Check attribution recall | … |
+
+Only then design targeted suppressions for high drop-rate categories.

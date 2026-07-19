@@ -179,6 +179,23 @@ async def review_case(
         latency_ms = (asyncio.get_running_loop().time() - started) * 1000.0
         zone_map = _zone_by_segment(response.segments)
         findings = [serialize_finding(f, zone_map) for f in response.findings]
+        editorial_step = next(
+            (step for step in response.pipeline_log if step.step_id == "editorial_gate"),
+            None,
+        )
+        editorial_diagnostics = (
+            editorial_step.output_summary.get("diagnostics") or []
+            if editorial_step is not None
+            else []
+        )
+        editorial_rejected = [
+            serialize_finding(finding, zone_map)
+            for finding in response.rejected_findings
+            if any(
+                isinstance(error, str) and error.startswith("editorial_gate:")
+                for error in finding.validation_errors
+            )
+        ]
         token_total, token_detail = _token_usage_from_client(orch)
         return {
             "case_id": case["case_id"],
@@ -191,6 +208,8 @@ async def review_case(
             "findings": findings,
             "raw_findings": findings,
             "rejected_finding_count": len(response.rejected_findings),
+            "editorial_gate_diagnostics": editorial_diagnostics,
+            "editorial_gate_rejected_findings": editorial_rejected,
             "mechanical_finding_count": response.mechanical_finding_count,
             "ai_finding_count": response.ai_finding_count,
         }
